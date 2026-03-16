@@ -8,10 +8,10 @@
 <meta property="og:description" content="Swipe to find concert buddies and turf partners in India">
 <title>GigMate — Find Your Concert Buddy</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg: #0a0a0f;
@@ -34,11 +34,8 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --font: 'Inter', system-ui, -apple-system, sans-serif;
 }
-
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
 html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
-
 body {
   font-family: var(--font);
   background: var(--bg);
@@ -48,15 +45,14 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
-
 ::selection { background: rgba(168,85,247,0.3); color: #fff; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(168,85,247,0.3); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(168,85,247,0.5); }
-
 a { color: inherit; text-decoration: none; }
-
+img { display: block; }
+button { font-family: var(--font); }
 canvas#particles {
   position: fixed; top: 0; left: 0;
   width: 100%; height: 100%;
@@ -75,16 +71,12 @@ canvas#particles {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   pointer-events: none; z-index: 9999;
 }
-
-/* ===== GRADIENT TEXT ===== */
 .gradient-text {
   background: var(--gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
-/* ===== GLASS ===== */
 .glass {
   background: rgba(18,18,26,0.7);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -95,8 +87,6 @@ canvas#particles {
   backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
   border: 1px solid var(--border);
 }
-
-/* ===== CARD ===== */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -108,8 +98,6 @@ canvas#particles {
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
-
-/* ===== BUTTONS ===== */
 .btn-gradient {
   background: var(--gradient); color: #fff; border: none;
   padding: 14px 32px; border-radius: var(--radius-full);
@@ -121,7 +109,6 @@ canvas#particles {
 .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(168,85,247,0.4); }
 .btn-gradient:active { transform: translateY(0); }
 .btn-gradient:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-
 .btn-outline {
   background: transparent; color: var(--text);
   border: 1px solid var(--border-hover);
@@ -131,7 +118,6 @@ canvas#particles {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
 }
 .btn-outline:hover { border-color: var(--primary); background: rgba(168,85,247,0.1); }
-
 .btn-icon {
   width: 48px; height: 48px; border-radius: 50%;
   border: 1px solid var(--border); background: var(--surface);
@@ -146,8 +132,6 @@ canvas#particles {
 .btn-icon.gold { border-color: rgba(245,158,11,0.3); color: var(--gold); }
 .btn-icon.gold:hover { background: rgba(245,158,11,0.1); box-shadow: 0 0 20px rgba(245,158,11,0.2); }
 .btn-icon.large { width: 60px; height: 60px; font-size: 24px; }
-
-/* ===== INPUTS ===== */
 .input {
   width: 100%; padding: 14px 18px; background: var(--surface);
   border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -158,7 +142,6 @@ canvas#particles {
 .input::placeholder { color: var(--text-secondary); }
 textarea.input { resize: vertical; min-height: 100px; }
 select.input { appearance: auto; }
-
 input[type="range"] {
   -webkit-appearance: none; width: 100%; height: 6px;
   background: var(--surface-hover); border-radius: 3px; outline: none;
@@ -172,8 +155,6 @@ input[type="range"]::-moz-range-thumb {
   width: 24px; height: 24px; border-radius: 50%;
   background: var(--primary); cursor: pointer; border: 2px solid #fff;
 }
-
-/* ===== BADGES ===== */
 .badge {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 4px 12px; border-radius: var(--radius-full);
@@ -185,17 +166,13 @@ input[type="range"]::-moz-range-thumb {
 .badge-success { background: rgba(34,197,94,0.15); color: var(--success); }
 .badge-gold { background: rgba(245,158,11,0.15); color: var(--gold); }
 .badge-danger { background: rgba(239,68,68,0.15); color: var(--danger); }
-
-/* ===== AVATAR ===== */
-.avatar { border-radius: 50%; object-fit: cover; background: var(--surface-hover); }
+.avatar { border-radius: 50%; object-fit: cover; background: var(--surface-hover); display: block; }
 .avatar-ring {
   position: relative; display: inline-flex; padding: 3px;
   border-radius: 50%; background: var(--gradient);
   background-size: 200% 200%; animation: gradientShift 3s ease infinite;
 }
 .avatar-ring .avatar { display: block; }
-
-/* ===== TOAST ===== */
 .toast {
   pointer-events: auto; padding: 14px 20px; border-radius: var(--radius-sm);
   font-size: 14px; font-weight: 500; display: flex; align-items: center;
@@ -208,14 +185,10 @@ input[type="range"]::-moz-range-thumb {
 .toast.info { background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); color: var(--primary); }
 .toast .toast-close { margin-left: auto; background: none; border: none; color: inherit; cursor: pointer; font-size: 18px; opacity: 0.7; }
 .toast-exit { animation: slideOutRight 0.3s ease forwards; }
-
-/* ===== SKELETON ===== */
 .skeleton {
   background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
   background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius-sm);
 }
-
-/* ===== BOTTOM NAV ===== */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0; height: 72px;
   display: flex; align-items: center; justify-content: space-around;
@@ -234,8 +207,6 @@ input[type="range"]::-moz-range-thumb {
   content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
   width: 20px; height: 3px; border-radius: 2px; background: var(--gradient);
 }
-
-/* ===== SIDE NAV ===== */
 .side-nav {
   position: fixed; left: 0; top: 0; bottom: 0; width: 72px;
   display: none; flex-direction: column; align-items: center;
@@ -253,8 +224,6 @@ input[type="range"]::-moz-range-thumb {
   transform: translateY(-50%); width: 3px; height: 20px;
 }
 .side-nav .logo-small { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
-
-/* ===== MODAL ===== */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.7);
   backdrop-filter: blur(8px); display: flex; align-items: center;
@@ -273,8 +242,6 @@ input[type="range"]::-moz-range-thumb {
   display: flex; align-items: center; justify-content: center; border-radius: 50%;
 }
 .modal-close:hover { background: var(--surface-hover); color: var(--text); }
-
-/* ===== PROGRESS BAR ===== */
 .progress-bar {
   width: 100%; height: 4px; background: var(--surface-hover);
   border-radius: 2px; overflow: hidden;
@@ -283,8 +250,6 @@ input[type="range"]::-moz-range-thumb {
   height: 100%; background: var(--gradient); border-radius: 2px;
   transition: width 0.4s ease;
 }
-
-/* ===== SWIPE ===== */
 .swipe-container {
   position: relative; height: 480px; width: 100%;
   display: flex; align-items: center; justify-content: center;
@@ -293,20 +258,17 @@ input[type="range"]::-moz-range-thumb {
   position: absolute; inset: 0; border-radius: var(--radius);
   overflow: hidden; cursor: grab; user-select: none;
   touch-action: none; will-change: transform;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border); background: var(--surface);
 }
 .swipe-card:active { cursor: grabbing; }
 .swipe-stamp {
-  position: absolute; top: 50%; transform: translateY(-50%);
+  position: absolute; top: 50%; transform: translateY(-50%) rotate(-15deg);
   font-size: 36px; font-weight: 800; padding: 12px 24px;
   border-radius: 12px; border: 4px solid; opacity: 0;
   z-index: 10; pointer-events: none; letter-spacing: 2px;
-  transition: none;
 }
-.stamp-right { right: 20px; color: var(--success); border-color: var(--success); background: rgba(34,197,94,0.1); }
-.stamp-left { left: 20px; color: var(--danger); border-color: var(--danger); background: rgba(239,68,68,0.1); }
-
-/* ===== CHAT ===== */
+.stamp-right { right: 20px; color: var(--success); border-color: var(--success); background: rgba(34,197,94,0.1); transform: translateY(-50%) rotate(-15deg); }
+.stamp-left { left: 20px; color: var(--danger); border-color: var(--danger); background: rgba(239,68,68,0.1); transform: translateY(-50%) rotate(15deg); }
 .chat-header {
   position: sticky; top: 0; padding: 16px; z-index: 10;
   display: flex; align-items: center; gap: 12px;
@@ -331,7 +293,6 @@ input[type="range"]::-moz-range-thumb {
   transition: var(--transition); flex-shrink: 0;
 }
 .chat-input-bar button:hover { transform: scale(1.05); }
-
 .chat-bubble {
   max-width: 80%; padding: 10px 16px; border-radius: 18px;
   font-size: 14px; line-height: 1.5; word-wrap: break-word;
@@ -345,15 +306,12 @@ input[type="range"]::-moz-range-thumb {
   border: 1px solid var(--border); border-bottom-left-radius: 4px;
 }
 .chat-time { font-size: 10px; color: var(--text-secondary); margin-top: 2px; padding: 0 4px; }
-
 .match-item {
   display: flex; align-items: center; gap: 14px; padding: 16px;
   border-radius: var(--radius); cursor: pointer; transition: var(--transition);
   border: 1px solid transparent;
 }
 .match-item:hover { background: var(--surface-hover); border-color: var(--border); }
-
-/* ===== EVENT CARD ===== */
 .event-card {
   border-radius: var(--radius); overflow: hidden; position: relative;
   cursor: pointer; transition: var(--transition); flex-shrink: 0;
@@ -367,22 +325,17 @@ input[type="range"]::-moz-range-thumb {
   justify-content: flex-end; padding: 16px;
   background: linear-gradient(transparent 30%, rgba(0,0,0,0.85));
 }
-
 .event-interest-card {
   display: flex; gap: 14px; padding: 16px; border-radius: var(--radius);
   background: var(--surface); border: 1px solid var(--border);
   cursor: pointer; transition: var(--transition); align-items: center;
 }
 .event-interest-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
-
-/* ===== TURF CARD ===== */
 .turf-card {
   padding: 20px; border-radius: var(--radius); background: var(--surface);
   border: 1px solid var(--border); transition: var(--transition);
 }
 .turf-card:hover { border-color: var(--border-hover); }
-
-/* ===== GENRE PILL ===== */
 .genre-pill {
   display: inline-flex; align-items: center; padding: 8px 18px;
   border-radius: var(--radius-full); border: 1px solid var(--border);
@@ -395,8 +348,6 @@ input[type="range"]::-moz-range-thumb {
   background: rgba(168,85,247,0.15); border-color: var(--primary);
   color: var(--primary); box-shadow: 0 0 12px rgba(168,85,247,0.2);
 }
-
-/* ===== PERSONA CARD ===== */
 .persona-card {
   padding: 20px 12px; border-radius: var(--radius); border: 1px solid var(--border);
   background: var(--surface); text-align: center; cursor: pointer;
@@ -410,8 +361,6 @@ input[type="range"]::-moz-range-thumb {
 .persona-emoji { font-size: 32px; display: block; margin-bottom: 8px; }
 .persona-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
 .persona-desc { font-size: 11px; color: var(--text-secondary); }
-
-/* ===== CITY CARD ===== */
 .city-card {
   padding: 14px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border);
   background: var(--surface); text-align: center; cursor: pointer;
@@ -422,8 +371,6 @@ input[type="range"]::-moz-range-thumb {
   border-color: var(--primary); background: rgba(168,85,247,0.1);
   color: var(--primary);
 }
-
-/* ===== STATS ===== */
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .stat-card {
   background: var(--surface); border: 1px solid var(--border);
@@ -431,16 +378,12 @@ input[type="range"]::-moz-range-thumb {
 }
 .stat-number { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
 .stat-label { font-size: 12px; color: var(--text-secondary); }
-
-/* ===== H-SCROLL ===== */
 .h-scroll {
   display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px;
   scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
 }
 .h-scroll::-webkit-scrollbar { display: none; }
 .h-scroll > * { scroll-snap-align: start; }
-
-/* ===== FILTER PILLS ===== */
 .filter-pills {
   display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
   scrollbar-width: none;
@@ -457,13 +400,12 @@ input[type="range"]::-moz-range-thumb {
   background: rgba(168,85,247,0.15); border-color: var(--primary);
   color: var(--primary);
 }
-
-/* ===== UPLOAD ZONE ===== */
 .upload-zone {
   border: 2px dashed var(--border); border-radius: var(--radius);
   padding: 40px 20px; text-align: center; cursor: pointer;
   transition: var(--transition); position: relative; overflow: hidden;
   min-height: 200px; display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
 }
 .upload-zone:hover { border-color: var(--primary); }
 .upload-zone.dragover { border-color: var(--primary); background: rgba(168,85,247,0.05); }
@@ -473,8 +415,6 @@ input[type="range"]::-moz-range-thumb {
 }
 .upload-zone.has-preview .upload-preview { display: block; }
 .upload-zone.has-preview .upload-text { display: none; }
-
-/* ===== FAB ===== */
 .fab {
   position: fixed; bottom: 90px; right: 20px; width: 56px; height: 56px;
   border-radius: 50%; background: var(--gradient); color: #fff;
@@ -484,27 +424,14 @@ input[type="range"]::-moz-range-thumb {
   font-weight: 300;
 }
 .fab:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(168,85,247,0.5); }
-
-/* ===== FLOATING ORBS ===== */
 .orb {
   position: absolute; border-radius: 50%; filter: blur(80px);
   animation: orb-float 20s infinite ease-in-out; pointer-events: none;
   opacity: 0.3;
 }
-.orb-1 {
-  width: 400px; height: 400px; background: var(--primary);
-  top: -100px; right: -100px; animation-delay: 0s;
-}
-.orb-2 {
-  width: 300px; height: 300px; background: var(--pink);
-  bottom: 20%; left: -80px; animation-delay: -7s;
-}
-.orb-3 {
-  width: 250px; height: 250px; background: var(--cyan);
-  top: 50%; right: 10%; animation-delay: -14s;
-}
-
-/* ===== MATCH OVERLAY ===== */
+.orb-1 { width: 400px; height: 400px; background: var(--primary); top: -100px; right: -100px; }
+.orb-2 { width: 300px; height: 300px; background: var(--pink); bottom: 20%; left: -80px; animation-delay: -7s; }
+.orb-3 { width: 250px; height: 250px; background: var(--cyan); top: 50%; right: 10%; animation-delay: -14s; }
 .match-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.9);
   backdrop-filter: blur(20px); display: flex; flex-direction: column;
@@ -512,12 +439,9 @@ input[type="range"]::-moz-range-thumb {
   animation: fadeIn 0.5s ease;
 }
 .match-overlay .match-title {
-  font-size: 48px; font-weight: 800; background: var(--gradient);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-size: 48px; font-weight: 800;
   animation: matchPop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-/* ===== LANDING PAGE ===== */
 .landing-nav {
   position: fixed; top: 0; left: 0; right: 0;
   padding: 16px 24px; display: flex; align-items: center;
@@ -528,7 +452,6 @@ input[type="range"]::-moz-range-thumb {
   border-bottom: 1px solid var(--border);
 }
 .landing-nav .logo { font-size: 22px; font-weight: 800; }
-
 .landing-hero {
   min-height: 100vh; display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center;
@@ -542,18 +465,15 @@ input[type="range"]::-moz-range-thumb {
   font-size: clamp(16px, 3vw, 20px); color: var(--text-secondary);
   max-width: 500px; margin-bottom: 32px; min-height: 30px;
 }
-
 .typewriter-cursor {
   display: inline-block; width: 2px; height: 1em;
   background: var(--primary); margin-left: 2px;
   animation: pulse 1s infinite; vertical-align: text-bottom;
 }
-
 .scroll-arrow {
   position: absolute; bottom: 40px; animation: bounce 2s infinite;
   font-size: 28px; color: var(--text-secondary); cursor: pointer;
 }
-
 .landing-stats {
   display: flex; justify-content: center; gap: 48px;
   padding: 40px 20px; flex-wrap: wrap;
@@ -561,7 +481,6 @@ input[type="range"]::-moz-range-thumb {
 .landing-stat { text-align: center; }
 .landing-stat .number { font-size: 36px; font-weight: 800; }
 .landing-stat .label { color: var(--text-secondary); font-size: 14px; }
-
 .how-it-works {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px; padding: 0 20px; max-width: 900px; margin: 0 auto;
@@ -570,7 +489,6 @@ input[type="range"]::-moz-range-thumb {
 .how-card .how-emoji { font-size: 48px; margin-bottom: 16px; display: block; }
 .how-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
 .how-card p { color: var(--text-secondary); font-size: 14px; }
-
 .testimonial-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px; max-width: 900px; margin: 0 auto; padding: 20px;
@@ -579,13 +497,10 @@ input[type="range"]::-moz-range-thumb {
 .testimonial-card .stars { color: var(--gold); margin-bottom: 12px; }
 .testimonial-card .quote { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; font-style: italic; }
 .testimonial-card .author { font-weight: 600; font-size: 14px; }
-
 .footer {
   text-align: center; padding: 40px 20px; color: var(--text-secondary);
   font-size: 14px; border-top: 1px solid var(--border);
 }
-
-/* ===== GOOGLE BTN ===== */
 .google-btn {
   width: 100%; padding: 14px; border-radius: var(--radius-sm);
   border: 1px solid var(--border); background: var(--surface);
@@ -594,7 +509,6 @@ input[type="range"]::-moz-range-thumb {
   display: flex; align-items: center; justify-content: center; gap: 12px;
 }
 .google-btn:hover { background: var(--surface-hover); border-color: var(--border-hover); }
-
 .divider {
   display: flex; align-items: center; gap: 16px;
   color: var(--text-secondary); font-size: 13px; margin: 20px 0;
@@ -602,13 +516,9 @@ input[type="range"]::-moz-range-thumb {
 .divider::before, .divider::after {
   content: ''; flex: 1; height: 1px; background: var(--border);
 }
-
-/* ===== PROFILE ===== */
 .profile-header { text-align: center; padding: 40px 20px; }
 .edit-modal-body { display: flex; flex-direction: column; gap: 16px; }
 .edit-modal-body label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; display: block; }
-
-/* ===== BADGE GRID ===== */
 .badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .badge-item {
   text-align: center; padding: 16px 8px; border-radius: var(--radius);
@@ -617,39 +527,29 @@ input[type="range"]::-moz-range-thumb {
 .badge-item.locked { opacity: 0.4; filter: grayscale(1); }
 .badge-item .badge-emoji { font-size: 28px; display: block; margin-bottom: 6px; }
 .badge-item .badge-name { font-size: 11px; color: var(--text-secondary); }
-
-/* ===== EMPTY STATE ===== */
 .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
 .empty-state .empty-emoji { font-size: 64px; margin-bottom: 16px; display: block; }
 .empty-state h3 { color: var(--text); font-size: 20px; margin-bottom: 8px; }
 .empty-state p { font-size: 14px; max-width: 300px; margin: 0 auto; }
-
 .unread-badge {
   background: var(--gradient); color: #fff; font-size: 11px; font-weight: 700;
   width: 20px; height: 20px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   position: absolute; top: -4px; right: -4px;
 }
-
-/* ===== PAGE ANIMATIONS ===== */
 .page-enter { animation: fadeInUp 0.4s ease both; }
-
 [data-animate] {
   opacity: 0; transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 [data-animate].visible { opacity: 1; transform: translateY(0); }
-
 [data-reveal] {
   opacity: 0; transform: translateY(20px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 [data-reveal].revealed { opacity: 1; transform: translateY(0); }
-
-/* ===== LAYOUT HELPERS ===== */
 .page-container { max-width: 500px; margin: 0 auto; padding: 20px 16px; }
 .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
-
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .items-center { align-items: center; }
@@ -677,8 +577,11 @@ input[type="range"]::-moz-range-thumb {
 .overflow-hidden { overflow: hidden; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-
-/* ===== KEYFRAMES ===== */
+.swipe-card-inner {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  justify-content: flex-end; padding: 24px;
+  background: linear-gradient(transparent 20%, rgba(0,0,0,0.9) 80%);
+}
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -691,13 +594,8 @@ input[type="range"]::-moz-range-thumb {
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 @keyframes bounce { 0%,20%,50%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-12px); } 60% { transform: translateY(-6px); } }
 @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-@keyframes typing { 0%,60%,100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
 @keyframes orb-float { 0%,100% { transform: translate(0,0) scale(1); } 25% { transform: translate(30px,-30px) scale(1.1); } 50% { transform: translate(-20px,20px) scale(0.95); } 75% { transform: translate(15px,10px) scale(1.05); } }
 @keyframes matchPop { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
-@keyframes cardFlyRight { to { transform: translateX(150%) rotate(30deg); opacity: 0; } }
-@keyframes cardFlyLeft { to { transform: translateX(-150%) rotate(-30deg); opacity: 0; } }
-
-/* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
   .swipe-container { height: 420px; }
   .modal-card { padding: 24px; margin: 10px; }
@@ -729,566 +627,432 @@ input[type="range"]::-moz-range-thumb {
 <canvas id="confetti-canvas"></canvas>
 
 <script>
-// ========== SUPABASE INIT ==========
-const SUPABASE_URL = 'https://neofyudbaodxeriwowej.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lb2Z5dWRiYW9keGVyaXdvd2VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MjU1MTAsImV4cCI6MjA4OTIwMTUxMH0.tQpl8D5ChCB0SJnakPCtb0qat5n1zKOQwDXS8vTavQs';
+(function(){
+"use strict";
 
-let supabase;
-try {
-  if (window.supabase && window.supabase.createClient) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  } else {
-    throw new Error('Supabase SDK not loaded');
+// ========== SUPABASE INIT ==========
+var SUPABASE_URL = 'https://neofyudbaodxeriwowej.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lb2Z5dWRiYW9keGVyaXdvd2VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MjU1MTAsImV4cCI6MjA4OTIwMTUxMH0.tQpl8D5ChCB0SJnakPCtb0qat5n1zKOQwDXS8vTavQs';
+
+var sb = null;
+
+function initSupabase() {
+  try {
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+  } catch(e) {
+    console.warn('Supabase init error:', e);
+    sb = null;
   }
-} catch(e) {
-  console.warn('Supabase init failed:', e.message);
-  supabase = null;
 }
 
-// ========== GLOBAL STATE ==========
-const state = {
+// ========== STATE ==========
+var state = {
   user: null,
   profile: null,
   currentPage: '',
-  events: [],
-  matches: [],
-  turfGames: [],
   realtimeChannels: []
 };
 
 // ========== DEMO DATA ==========
-const DEMO_PROFILES = [
-  { id: 'demo-1', full_name: 'Arjun', age: 24, city: 'Mumbai', bio: 'Looking for someone to headbang at The Local Train gig 🤘', avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun', concert_persona: '🕺 Dance Floor Paagal', favorite_genres: ['Rock', 'Indie', 'Metal'], energy_level: 8, rating_avg: 4.5, total_events: 12 },
-  { id: 'demo-2', full_name: 'Sneha', age: 22, city: 'Bangalore', bio: "Need a festival buddy for NH7, my friends think it's too expensive 😤", avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sneha', concert_persona: '🎪 Festival Veteran', favorite_genres: ['Indie', 'EDM/Electronic', 'Pop'], energy_level: 9, rating_avg: 4.8, total_events: 20 },
-  { id: 'demo-3', full_name: 'Rahul', age: 26, city: 'Delhi', bio: "IPL stadium mein akele jaana boring hai, let's go!", avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rahul', concert_persona: '⚡ Front Row Warrior', favorite_genres: ['Bollywood', 'Punjabi', 'Hip-Hop/Rap'], energy_level: 7, rating_avg: 4.2, total_events: 8 },
-  { id: 'demo-4', full_name: 'Priya', age: 23, city: 'Chennai', bio: 'Anirudh concert buddy chahiye, none of my friends are into Kollywood music', avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya', concert_persona: '🎤 Antakshari Champion', favorite_genres: ['Tamil/Kollywood', 'Carnatic', 'Pop'], energy_level: 6, rating_avg: 4.7, total_events: 15 },
-  { id: 'demo-5', full_name: 'Karthik', age: 25, city: 'Hyderabad', bio: 'Sunday box cricket, need 2 more players', avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Karthik', concert_persona: '🍿 Chill Macha', favorite_genres: ['Lo-fi', 'Jazz', 'Classical/Fusion'], energy_level: 4, rating_avg: 4.0, total_events: 5 },
-  { id: 'demo-6', full_name: 'Ananya', age: 21, city: 'Pune', bio: "Prateek Kuhad fan looking for someone who won't talk during cold/mess 🎶", avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ananya', concert_persona: '📸 The Reels Creator', favorite_genres: ['Indie', 'Lo-fi', 'Folk'], energy_level: 5, rating_avg: 4.9, total_events: 18 },
-  { id: 'demo-7', full_name: 'Vikram', age: 27, city: 'Mumbai', bio: 'Football turf every Saturday, intermediate level, Andheri area', avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram', concert_persona: '⚡ Front Row Warrior', favorite_genres: ['Rock', 'Metal', 'EDM/Electronic'], energy_level: 9, rating_avg: 4.3, total_events: 10 },
-  { id: 'demo-8', full_name: 'Meera', age: 24, city: 'Delhi', bio: 'Sufi night at Piano Man, anyone?', avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Meera', concert_persona: '🍿 Chill Macha', favorite_genres: ['Sufi/Qawwali', 'Classical/Fusion', 'Folk'], energy_level: 3, rating_avg: 4.6, total_events: 14 }
+var DEMO_PROFILES = [
+  { id:'d1', full_name:'Arjun', age:24, city:'Mumbai', bio:'Looking for someone to headbang at The Local Train gig 🤘', avatar_url:'https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun', concert_persona:'🕺 Dance Floor Paagal', favorite_genres:['Rock','Indie','Metal'], energy_level:8, rating_avg:4.5, total_events:12 },
+  { id:'d2', full_name:'Sneha', age:22, city:'Bangalore', bio:'Need a festival buddy for NH7, my friends think it\'s too expensive 😤', avatar_url:'https://api.dicebear.com/7.x/avataaars/svg?seed=Sneha', concert_persona:'🎪 Festival Veteran', favorite_genres:['Indie','EDM/Electronic','Pop'], energy_level:9, rating_avg:4.8, total_events:20 },
+  { id:'d3', full_name:'Rahul', age:26, city:'Delhi', bio:'IPL stadium mein akele jaana boring hai, let\'s go!', avatar_url:'https://api.dicebear.com/7.x/avataaars/svg?seed=Rahul', concert_persona:'⚡ Front Row Warrior', favorite_genres:['Bollywood','Punjabi','Hip-Hop/Rap'], energy_level:7, rating_avg:4.2, total_events:8 },
+  { id:'d4', full_name:'Priya', age:23, city:'Chennai', bio:'Anirudh concert buddy chahiye, none of my friends are into Kollywood music', avatar_url:'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya', concert_persona:'🎤 Antakshari Champion', favorite_genres:['Tamil/Kollywood','Carnatic','Pop'], energy_level:6, rating_avg:4.7, total_events:15 },
+  { id:'d5', full_name:'Karthik', age:25, city:'Hyderabad', bio:'Sunday box cricket, need 2 more players', avatar_url:'https://api.dicebear.com/7.x/avataaars/svg?seed=Karthik', concert_persona:'🍿 Chill Macha', favorite_genres:['Lo-fi','Jazz','Classical/Fusion'], energy_level:4, rating_avg:4.0, total_events:5 },
+  { id:'d6', full_name:'Ananya', age:21, city:'Pune', bio:'Prateek Kuhad fan looking for someone who won\'t talk during cold/mess 🎶', avatar_url:'https://api.dicebear.com/7.x/avataaars/svg?seed=Ananya', concert_persona:'📸 The Reels Creator', favorite_genres:['Indie','Lo-fi','Folk'], energy_level:5, rating_avg:4.9, total_events:18 },
+  { id:'d7', full_name:'Vikram', age:27, city:'Mumbai', bio:'Football turf every Saturday, intermediate level, Andheri area', avatar_url:'https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram', concert_persona:'⚡ Front Row Warrior', favorite_genres:['Rock','Metal','EDM/Electronic'], energy_level:9, rating_avg:4.3, total_events:10 },
+  { id:'d8', full_name:'Meera', age:24, city:'Delhi', bio:'Sufi night at Piano Man, anyone?', avatar_url:'https://api.dicebear.com/7.x/avataaars/svg?seed=Meera', concert_persona:'🍿 Chill Macha', favorite_genres:['Sufi/Qawwali','Classical/Fusion','Folk'], energy_level:3, rating_avg:4.6, total_events:14 }
 ];
 
-const DEMO_EVENTS = [
-  { id: 'demo-ev-1', title: 'Arijit Singh Live', artist_name: 'Arijit Singh', venue_name: 'MMRDA Grounds', venue_city: 'Mumbai', event_date: '2025-02-15', event_time: '7:00 PM', genre: 'Bollywood', poster_image_url: '' },
-  { id: 'demo-ev-2', title: 'NH7 Weekender', artist_name: 'Various Artists', venue_name: 'Mahalaxmi Lawns', venue_city: 'Pune', event_date: '2025-03-01', event_time: '12:00 PM', genre: 'Indie', poster_image_url: '' },
-  { id: 'demo-ev-3', title: 'Prateek Kuhad — The Way That Lovers Do', artist_name: 'Prateek Kuhad', venue_name: 'Phoenix Marketcity', venue_city: 'Bangalore', event_date: '2025-02-22', event_time: '8:00 PM', genre: 'Indie', poster_image_url: '' },
-  { id: 'demo-ev-4', title: 'Anirudh Once Upon A Time Tour', artist_name: 'Anirudh Ravichander', venue_name: 'Jawaharlal Nehru Stadium', venue_city: 'Chennai', event_date: '2025-03-10', event_time: '6:30 PM', genre: 'Tamil/Kollywood', poster_image_url: '' },
-  { id: 'demo-ev-5', title: 'Sunburn Arena ft. Martin Garrix', artist_name: 'Martin Garrix', venue_name: 'NSCI Dome', venue_city: 'Mumbai', event_date: '2025-04-05', event_time: '5:00 PM', genre: 'EDM/Electronic', poster_image_url: '' },
-  { id: 'demo-ev-6', title: 'AP Dhillon Live', artist_name: 'AP Dhillon', venue_name: 'JLN Stadium', venue_city: 'Delhi NCR', event_date: '2025-03-20', event_time: '7:30 PM', genre: 'Punjabi', poster_image_url: '' }
+var DEMO_EVENTS = [
+  { id:'de1', title:'Arijit Singh Live', artist_name:'Arijit Singh', venue_name:'MMRDA Grounds', venue_city:'Mumbai', event_date:'2025-02-15', event_time:'7:00 PM', genre:'Bollywood', poster_image_url:'' },
+  { id:'de2', title:'NH7 Weekender', artist_name:'Various Artists', venue_name:'Mahalaxmi Lawns', venue_city:'Pune', event_date:'2025-03-01', event_time:'12:00 PM', genre:'Indie', poster_image_url:'' },
+  { id:'de3', title:'Prateek Kuhad — The Way That Lovers Do', artist_name:'Prateek Kuhad', venue_name:'Phoenix Marketcity', venue_city:'Bangalore', event_date:'2025-02-22', event_time:'8:00 PM', genre:'Indie', poster_image_url:'' },
+  { id:'de4', title:'Anirudh Once Upon A Time Tour', artist_name:'Anirudh Ravichander', venue_name:'Nehru Stadium', venue_city:'Chennai', event_date:'2025-03-10', event_time:'6:30 PM', genre:'Tamil/Kollywood', poster_image_url:'' },
+  { id:'de5', title:'Sunburn Arena ft. Martin Garrix', artist_name:'Martin Garrix', venue_name:'NSCI Dome', venue_city:'Mumbai', event_date:'2025-04-05', event_time:'5:00 PM', genre:'EDM/Electronic', poster_image_url:'' },
+  { id:'de6', title:'AP Dhillon Live', artist_name:'AP Dhillon', venue_name:'JLN Stadium', venue_city:'Delhi NCR', event_date:'2025-03-20', event_time:'7:30 PM', genre:'Punjabi', poster_image_url:'' }
 ];
 
-const DEMO_TURF_GAMES = [
-  { id: 'demo-tg-1', sport: 'Box Cricket', venue_name: 'PowerPlay Arena', location: 'Mumbai', game_date: '2025-01-25', game_time: '6:00 PM', players_needed: 4, skill_level: 'Intermediate (decent)', status: 'open', creator: { full_name: 'Vikram', avatar_url: '' } },
-  { id: 'demo-tg-2', sport: 'Football 5-a-side', venue_name: 'Kick Off Turf', location: 'Bangalore', game_date: '2025-01-26', game_time: '7:00 AM', players_needed: 3, skill_level: 'Any level welcome', status: 'open', creator: { full_name: 'Karthik', avatar_url: '' } },
-  { id: 'demo-tg-3', sport: 'Badminton', venue_name: 'Shuttle Zone', location: 'Pune', game_date: '2025-01-27', game_time: '5:30 PM', players_needed: 1, skill_level: 'Beginner (timepass)', status: 'open', creator: { full_name: 'Ananya', avatar_url: '' } },
-  { id: 'demo-tg-4', sport: 'Basketball', venue_name: 'Hoop Dreams Court', location: 'Delhi NCR', game_date: '2025-01-28', game_time: '6:00 PM', players_needed: 6, skill_level: 'Advanced (serious)', status: 'open', creator: { full_name: 'Rahul', avatar_url: '' } }
+var DEMO_TURF = [
+  { id:'dt1', sport:'Box Cricket', venue_name:'PowerPlay Arena', location:'Mumbai', game_date:'2025-01-25', game_time:'6:00 PM', players_needed:4, skill_level:'Intermediate (decent)', status:'open', creator:{full_name:'Vikram',avatar_url:''} },
+  { id:'dt2', sport:'Football 5-a-side', venue_name:'Kick Off Turf', location:'Bangalore', game_date:'2025-01-26', game_time:'7:00 AM', players_needed:3, skill_level:'Any level welcome', status:'open', creator:{full_name:'Karthik',avatar_url:''} },
+  { id:'dt3', sport:'Badminton', venue_name:'Shuttle Zone', location:'Pune', game_date:'2025-01-27', game_time:'5:30 PM', players_needed:1, skill_level:'Beginner (timepass)', status:'open', creator:{full_name:'Ananya',avatar_url:''} },
+  { id:'dt4', sport:'Basketball', venue_name:'Hoop Dreams Court', location:'Delhi NCR', game_date:'2025-01-28', game_time:'6:00 PM', players_needed:6, skill_level:'Advanced (serious)', status:'open', creator:{full_name:'Rahul',avatar_url:''} }
 ];
 
-const INDIAN_CITIES = ['Mumbai', 'Delhi NCR', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune', 'Kolkata', 'Goa', 'Jaipur', 'Ahmedabad', 'Chandigarh', 'Kochi'];
-
-const CONCERT_PERSONAS = [
-  { emoji: '🎤', title: 'Antakshari Champion', desc: 'Knows every lyric, will outsing the artist' },
-  { emoji: '📸', title: 'The Reels Creator', desc: 'Here for the content, stay for the music' },
-  { emoji: '🕺', title: 'Dance Floor Paagal', desc: 'First one dancing, last one to leave' },
-  { emoji: '🍿', title: 'Chill Macha', desc: 'Just vibing, soaking it all in' },
-  { emoji: '⚡', title: 'Front Row Warrior', desc: 'Gets there 2 hours early for the best spot' },
-  { emoji: '🎪', title: 'Festival Veteran', desc: 'NH7, Sunburn, Echoes — been to all of them' }
+var CITIES = ['Mumbai','Delhi NCR','Bangalore','Chennai','Hyderabad','Pune','Kolkata','Goa','Jaipur','Ahmedabad','Chandigarh','Kochi'];
+var PERSONAS = [
+  {emoji:'🎤',title:'Antakshari Champion',desc:'Knows every lyric, will outsing the artist'},
+  {emoji:'📸',title:'The Reels Creator',desc:'Here for the content, stay for the music'},
+  {emoji:'🕺',title:'Dance Floor Paagal',desc:'First one dancing, last one to leave'},
+  {emoji:'🍿',title:'Chill Macha',desc:'Just vibing, soaking it all in'},
+  {emoji:'⚡',title:'Front Row Warrior',desc:'Gets there 2 hours early for the best spot'},
+  {emoji:'🎪',title:'Festival Veteran',desc:'NH7, Sunburn, Echoes — been to all of them'}
 ];
+var GENRES = ['Bollywood','Indie','Hip-Hop/Rap','EDM/Electronic','Classical/Fusion','Punjabi','Tamil/Kollywood','Rock','Pop','Sufi/Qawwali','Lo-fi','Metal','Jazz','Folk','Carnatic'];
+var SPORTS = ['Box Cricket','Football 5-a-side','Badminton','Basketball','Table Tennis','Running/Jogging','Pool/Snooker'];
+var SKILLS = ['Beginner (timepass)','Intermediate (decent)','Advanced (serious)','Any level welcome'];
+var SPORT_E = {'Box Cricket':'🏏','Football 5-a-side':'⚽','Badminton':'🏸','Basketball':'🏀','Table Tennis':'🏓','Running/Jogging':'🏃','Pool/Snooker':'🎱'};
 
-const MUSIC_GENRES = ['Bollywood', 'Indie', 'Hip-Hop/Rap', 'EDM/Electronic', 'Classical/Fusion', 'Punjabi', 'Tamil/Kollywood', 'Rock', 'Pop', 'Sufi/Qawwali', 'Lo-fi', 'Metal', 'Jazz', 'Folk', 'Carnatic'];
-const SPORTS = ['Box Cricket', 'Football 5-a-side', 'Badminton', 'Basketball', 'Table Tennis', 'Running/Jogging', 'Pool/Snooker'];
-const SKILL_LEVELS = ['Beginner (timepass)', 'Intermediate (decent)', 'Advanced (serious)', 'Any level welcome'];
-const SPORT_EMOJIS = { 'Box Cricket': '🏏', 'Football 5-a-side': '⚽', 'Badminton': '🏸', 'Basketball': '🏀', 'Table Tennis': '🏓', 'Running/Jogging': '🏃', 'Pool/Snooker': '🎱' };
+// ========== UTILITY ==========
+function esc(t) { var d = document.createElement('div'); d.textContent = t || ''; return d.innerHTML; }
+function nav(h) { window.location.hash = h; }
+function fmtDate(d) { if (!d) return ''; try { var dt = new Date(d+'T00:00:00'); return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short'}); } catch(e) { return d; } }
+function timeAgo(d) { if (!d) return ''; var s = Math.floor((Date.now()-new Date(d).getTime())/1000); if (s<60) return 'now'; if (s<3600) return Math.floor(s/60)+'m'; if (s<86400) return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
+function greeting() { var h = new Date().getHours(); return h<12?'Good morning':h<17?'Good afternoon':'Good evening'; }
+function defAvatar(n) { return 'https://api.dicebear.com/7.x/avataaars/svg?seed='+encodeURIComponent(n||'user'); }
+function matchPct(a,b) { if (!a||!b||!a.length||!b.length) return Math.floor(Math.random()*30+65); var s=a.filter(function(g){return b.indexOf(g)>=0;}); return Math.min(99,Math.floor((s.length/Math.max(a.length,b.length))*100)+40); }
 
-// ========== API FUNCTIONS ==========
-const API = {
-  async signInWithGoogle() {
-    if (!supabase) { showToast('Backend not available. Demo mode only.', 'info'); return; }
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
-      if (error) throw error;
-    } catch (e) { showToast('Sign in failed: ' + e.message, 'error'); }
-  },
-
-  async signInWithEmail(email) {
-    if (!supabase) { showToast('Backend not available. Demo mode only.', 'info'); return; }
-    try {
-      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin } });
-      if (error) throw error;
-      showToast('Magic link sent! Check your email 📧', 'success');
-    } catch (e) { showToast('Failed to send magic link: ' + e.message, 'error'); }
-  },
-
-  async signOut() {
-    if (!supabase) { state.user = null; state.profile = null; navigate(''); return; }
-    try {
-      state.realtimeChannels.forEach(ch => supabase.removeChannel(ch));
-      state.realtimeChannels = [];
-      await supabase.auth.signOut();
-      state.user = null; state.profile = null;
-      navigate('');
-    } catch (e) { showToast('Sign out failed: ' + e.message, 'error'); }
-  },
-
-  async getProfile(userId) {
-    if (!supabase) return null;
-    try {
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
-      if (error && error.code !== 'PGRST116') throw error;
-      return data;
-    } catch (e) { console.warn('getProfile error:', e.message); return null; }
-  },
-
-  async updateProfile(userId, profileData) {
-    if (!supabase) return profileData;
-    try {
-      const { data, error } = await supabase.from('profiles').upsert({ id: userId, ...profileData, updated_at: new Date().toISOString() }).select().single();
-      if (error) throw error;
-      state.profile = data;
-      return data;
-    } catch (e) { showToast('Failed to update profile: ' + e.message, 'error'); return null; }
-  },
-
-  async uploadAvatar(userId, file) {
-    if (!supabase) return URL.createObjectURL(file);
-    try {
-      const ext = file.name.split('.').pop();
-      const fileName = userId + '/avatar.' + ext;
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(fileName, file, { upsert: true });
-      if (uploadError) throw uploadError;
-      const { data } = supabase.storage.from('avatars').getPublicUrl(fileName);
-      return data.publicUrl + '?t=' + Date.now();
-    } catch (e) { showToast('Upload failed: ' + e.message, 'error'); return null; }
-  },
-
-  async getEvents(city) {
-    if (!supabase) return DEMO_EVENTS;
-    try {
-      let query = supabase.from('events').select('*').order('event_date', { ascending: true });
-      if (city && city !== 'All') query = query.eq('venue_city', city);
-      const { data, error } = await query;
-      if (error) throw error;
-      return (data && data.length > 0) ? data : DEMO_EVENTS;
-    } catch (e) { return DEMO_EVENTS; }
-  },
-
-  async getEventById(id) {
-    if (id.startsWith('demo-ev-')) return DEMO_EVENTS.find(e => e.id === id) || null;
-    if (!supabase) return null;
-    try {
-      const { data, error } = await supabase.from('events').select('*').eq('id', id).single();
-      if (error) throw error;
-      return data;
-    } catch (e) { return null; }
-  },
-
-  async addEventInterest(userId, eventId) {
-    if (!supabase) { showToast('Added to your events! 🎉', 'success'); return; }
-    try {
-      const { error } = await supabase.from('event_interests').insert({ user_id: userId, event_id: eventId });
-      if (error) throw error;
-      showToast('Added to your events! 🎉', 'success');
-    } catch (e) {
-      if (e.code === '23505') showToast('Already interested!', 'info');
-      else showToast('Failed: ' + e.message, 'error');
-    }
-  },
-
-  async removeEventInterest(userId, eventId) {
-    if (!supabase) return;
-    try {
-      const { error } = await supabase.from('event_interests').delete().eq('user_id', userId).eq('event_id', eventId);
-      if (error) throw error;
-    } catch (e) { showToast('Failed: ' + e.message, 'error'); }
-  },
-
-  async getUserEventInterests(userId) {
-    if (!supabase) return [];
-    try {
-      const { data, error } = await supabase.from('event_interests').select('*, events(*)').eq('user_id', userId);
-      if (error) throw error;
-      return data || [];
-    } catch (e) { return []; }
-  },
-
-  async getProfilesForEvent(eventId, currentUserId) {
-    if (!supabase || eventId.startsWith('demo-ev-')) return [];
-    try {
-      const { data: swipedData } = await supabase.from('swipes').select('swiped_id').eq('swiper_id', currentUserId).eq('event_id', eventId);
-      const swipedIds = (swipedData || []).map(s => s.swiped_id);
-      swipedIds.push(currentUserId);
-      const { data: interestedUsers } = await supabase.from('event_interests').select('user_id').eq('event_id', eventId).not('user_id', 'in', '(' + swipedIds.join(',') + ')');
-      if (!interestedUsers || interestedUsers.length === 0) return [];
-      const userIds = interestedUsers.map(u => u.user_id);
-      const { data: profiles } = await supabase.from('profiles').select('*').in('id', userIds);
-      return profiles || [];
-    } catch (e) { return []; }
-  },
-
-  async createSwipe(swiperId, swipedId, eventId, direction) {
-    if (!supabase) return null;
-    try {
-      const { error } = await supabase.from('swipes').insert({ swiper_id: swiperId, swiped_id: swipedId, event_id: eventId, direction });
-      if (error) throw error;
-      if (direction === 'right' || direction === 'super') {
-        const { data: match } = await supabase.from('matches').select('*')
-          .or('and(user1_id.eq.' + swiperId + ',user2_id.eq.' + swipedId + '),and(user1_id.eq.' + swipedId + ',user2_id.eq.' + swiperId + ')')
-          .eq('event_id', eventId).maybeSingle();
-        return match;
-      }
-      return null;
-    } catch (e) { return null; }
-  },
-
-  async getMatches(userId) {
-    if (!supabase) return [];
-    try {
-      const { data, error } = await supabase.from('matches').select('*, user1:profiles!matches_user1_id_fkey(*), user2:profiles!matches_user2_id_fkey(*), event:events(*)').or('user1_id.eq.' + userId + ',user2_id.eq.' + userId).order('matched_at', { ascending: false });
-      if (error) throw error;
-      return data || [];
-    } catch (e) { return []; }
-  },
-
-  async getMessages(matchId) {
-    if (!supabase) return [];
-    try {
-      const { data, error } = await supabase.from('messages').select('*').eq('match_id', matchId).order('created_at', { ascending: true });
-      if (error) throw error;
-      return data || [];
-    } catch (e) { return []; }
-  },
-
-  async sendMessage(matchId, senderId, content) {
-    if (!supabase) return null;
-    try {
-      const { data, error } = await supabase.from('messages').insert({ match_id: matchId, sender_id: senderId, content, read: false }).select().single();
-      if (error) throw error;
-      return data;
-    } catch (e) { showToast('Send failed: ' + e.message, 'error'); return null; }
-  },
-
-  subscribeToMessages(matchId, callback) {
-    if (!supabase) return null;
-    const channel = supabase.channel('messages:' + matchId)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: 'match_id=eq.' + matchId }, payload => callback(payload.new))
-      .subscribe();
-    state.realtimeChannels.push(channel);
-    return channel;
-  },
-
-  subscribeToNewMatches(userId, callback) {
-    if (!supabase) return null;
-    const channel = supabase.channel('matches:' + userId)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'matches', filter: 'user1_id=eq.' + userId }, payload => callback(payload.new))
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'matches', filter: 'user2_id=eq.' + userId }, payload => callback(payload.new))
-      .subscribe();
-    state.realtimeChannels.push(channel);
-    return channel;
-  },
-
-  async getTurfGames(sport, city) {
-    if (!supabase) {
-      let games = [...DEMO_TURF_GAMES];
-      if (sport && sport !== 'All') games = games.filter(g => g.sport === sport);
-      return games;
-    }
-    try {
-      let query = supabase.from('turf_games').select('*, creator:profiles!turf_games_creator_id_fkey(full_name, avatar_url)').order('game_date', { ascending: true });
-      if (sport && sport !== 'All') query = query.eq('sport', sport);
-      if (city) query = query.eq('location', city);
-      const { data, error } = await query;
-      if (error) throw error;
-      return (data && data.length > 0) ? data : DEMO_TURF_GAMES;
-    } catch (e) { return DEMO_TURF_GAMES; }
-  },
-
-  async createTurfGame(gameData) {
-    if (!supabase) { showToast('Game created! 🎉 (demo)', 'success'); return gameData; }
-    try {
-      const { data, error } = await supabase.from('turf_games').insert(gameData).select().single();
-      if (error) throw error;
-      showToast('Game created! 🎉', 'success');
-      return data;
-    } catch (e) { showToast('Failed: ' + e.message, 'error'); return null; }
-  },
-
-  async joinTurfGame(gameId, userId) {
-    if (!supabase) { showToast('Joined the game! 🙌 (demo)', 'success'); return; }
-    try {
-      const { error } = await supabase.from('turf_game_players').insert({ game_id: gameId, user_id: userId });
-      if (error) throw error;
-      showToast('Joined the game! 🙌', 'success');
-    } catch (e) {
-      if (e.code === '23505') showToast('Already joined!', 'info');
-      else showToast('Failed: ' + e.message, 'error');
-    }
-  }
-};
+// ========== TOAST ==========
+function showToast(msg, type) {
+  type = type || 'info';
+  var c = document.getElementById('toast-container');
+  if (!c) return;
+  var t = document.createElement('div');
+  t.className = 'toast ' + type;
+  var icons = {success:'✓', error:'✕', info:'ℹ'};
+  t.innerHTML = '<span>'+(icons[type]||'ℹ')+'</span><span>'+msg+'</span><button class="toast-close" style="pointer-events:auto">&times;</button>';
+  c.appendChild(t);
+  t.querySelector('.toast-close').onclick = function() { t.classList.add('toast-exit'); setTimeout(function(){t.remove();},300); };
+  setTimeout(function() { if (t.parentElement) { t.classList.add('toast-exit'); setTimeout(function(){t.remove();},300); } }, 3500);
+}
 
 // ========== ANIMATIONS ==========
-class ParticleSystem {
-  constructor(canvas) {
-    this.canvas = canvas;
-    this.ctx = canvas.getContext('2d');
-    this.particles = [];
-    this.mouse = { x: -1000, y: -1000 };
-    this.resize();
-    this.createParticles();
-    window.addEventListener('resize', () => this.resize());
-    window.addEventListener('mousemove', (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
-    this.animate();
-  }
-  resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; }
-  createParticles() {
-    const count = Math.min(80, Math.floor(window.innerWidth * window.innerHeight / 20000));
-    this.particles = [];
-    for (let i = 0; i < count; i++) {
-      this.particles.push({
-        x: Math.random() * this.canvas.width,
-        y: Math.random() * this.canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: Math.random() * 2 + 0.5,
-        opacity: Math.random() * 0.4 + 0.1
-      });
-    }
-  }
-  animate() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.particles.forEach((p, i) => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = this.canvas.width;
-      if (p.x > this.canvas.width) p.x = 0;
-      if (p.y < 0) p.y = this.canvas.height;
-      if (p.y > this.canvas.height) p.y = 0;
-      const dx = this.mouse.x - p.x, dy = this.mouse.y - p.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) { p.x -= dx * 0.008; p.y -= dy * 0.008; }
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      this.ctx.fillStyle = 'rgba(168, 85, 247, ' + p.opacity + ')';
-      this.ctx.fill();
-      for (let j = i + 1; j < this.particles.length; j++) {
-        const p2 = this.particles[j];
-        const d = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
-        if (d < 100) {
-          this.ctx.beginPath(); this.ctx.moveTo(p.x, p.y); this.ctx.lineTo(p2.x, p2.y);
-          this.ctx.strokeStyle = 'rgba(168, 85, 247, ' + (0.06 * (1 - d / 100)) + ')';
-          this.ctx.lineWidth = 0.5; this.ctx.stroke();
-        }
-      }
-    });
-    requestAnimationFrame(() => this.animate());
-  }
-}
-
-class ConfettiSystem {
-  constructor() {
-    this.canvas = document.getElementById('confetti-canvas');
-    this.ctx = this.canvas.getContext('2d');
-    this.particles = []; this.active = false;
-    this.resize();
-    window.addEventListener('resize', () => this.resize());
-  }
-  resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; }
-  burst() {
-    this.particles = [];
-    const colors = ['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b', '#ef4444', '#fff'];
-    for (let i = 0; i < 150; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const velocity = Math.random() * 12 + 4;
-      this.particles.push({
-        x: this.canvas.width / 2, y: this.canvas.height / 2,
-        vx: Math.cos(angle) * velocity, vy: Math.sin(angle) * velocity - 5,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        size: Math.random() * 8 + 3, rotation: Math.random() * 360,
-        rotationSpeed: (Math.random() - 0.5) * 10, opacity: 1, life: 0
-      });
-    }
-    this.active = true; this.animateConfetti();
-  }
-  animateConfetti() {
-    if (!this.active) return;
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    let alive = false;
-    this.particles.forEach(p => {
-      p.life += 1 / 60; if (p.life > 3) return;
-      alive = true; p.x += p.vx; p.y += p.vy; p.vy += 0.3;
-      p.rotation += p.rotationSpeed; p.opacity = Math.max(0, 1 - p.life / 3);
-      this.ctx.save(); this.ctx.translate(p.x, p.y);
-      this.ctx.rotate(p.rotation * Math.PI / 180);
-      this.ctx.globalAlpha = p.opacity; this.ctx.fillStyle = p.color;
-      this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
-      this.ctx.restore();
-    });
-    if (alive) requestAnimationFrame(() => this.animateConfetti());
-    else { this.active = false; this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); }
-  }
-}
-
-function showToast(message, type) {
-  type = type || 'info';
-  const container = document.getElementById('toast-container');
-  if (!container) return;
-  const toast = document.createElement('div');
-  toast.className = 'toast ' + type;
-  const icons = { success: '✓', error: '✕', info: 'ℹ' };
-  toast.innerHTML = '<span>' + (icons[type] || 'ℹ') + '</span><span>' + message + '</span><button class="toast-close" onclick="this.parentElement.classList.add(\'toast-exit\');setTimeout(()=>this.parentElement.remove(),300)">&times;</button>';
-  container.appendChild(toast);
-  setTimeout(() => { if (toast.parentElement) { toast.classList.add('toast-exit'); setTimeout(() => toast.remove(), 300); } }, 3500);
-}
-
 function staggerIn(parent) {
   if (!parent) return;
-  const children = parent.querySelectorAll('[data-animate]');
-  children.forEach((child, i) => { setTimeout(() => child.classList.add('visible'), i * 80 + 50); });
+  var ch = parent.querySelectorAll('[data-animate]');
+  for (var i = 0; i < ch.length; i++) {
+    (function(el, idx) { setTimeout(function() { el.classList.add('visible'); }, idx * 80 + 50); })(ch[i], i);
+  }
 }
 
 function animateCounter(el, target) {
   if (!el || isNaN(target)) return;
-  const duration = 2000; const start = performance.now();
-  const update = (now) => {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.floor(eased * target).toLocaleString();
-    if (progress < 1) requestAnimationFrame(update);
-  };
-  requestAnimationFrame(update);
+  var dur = 2000, start = performance.now();
+  function upd(now) {
+    var p = Math.min((now - start) / dur, 1);
+    var e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(e * target).toLocaleString();
+    if (p < 1) requestAnimationFrame(upd);
+  }
+  requestAnimationFrame(upd);
 }
 
 function scrollReveal() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
+  try {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(en) { if (en.isIntersecting) { en.target.classList.add('revealed'); obs.unobserve(en.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('[data-reveal]').forEach(function(el) { obs.observe(el); });
+  } catch(e) {}
 }
 
-function typewriter(element, texts) {
-  if (!element) return;
-  let textIndex = 0, charIndex = 0, isDeleting = false, timeout;
+function typewriter(el, texts) {
+  if (!el || !texts || !texts.length) return;
+  var ti = 0, ci = 0, del = false, tm;
   function tick() {
-    const current = texts[textIndex];
-    if (isDeleting) {
-      charIndex--;
-      element.textContent = current.substring(0, charIndex);
-      if (charIndex === 0) { isDeleting = false; textIndex = (textIndex + 1) % texts.length; timeout = setTimeout(tick, 500); return; }
-      timeout = setTimeout(tick, 30);
+    var cur = texts[ti];
+    if (del) {
+      ci--;
+      el.textContent = cur.substring(0, ci);
+      if (ci === 0) { del = false; ti = (ti + 1) % texts.length; tm = setTimeout(tick, 500); return; }
+      tm = setTimeout(tick, 30);
     } else {
-      charIndex++;
-      element.textContent = current.substring(0, charIndex);
-      if (charIndex === current.length) { isDeleting = true; timeout = setTimeout(tick, 2000); return; }
-      timeout = setTimeout(tick, 80);
+      ci++;
+      el.textContent = cur.substring(0, ci);
+      if (ci === cur.length) { del = true; tm = setTimeout(tick, 2000); return; }
+      tm = setTimeout(tick, 80);
     }
   }
   tick();
-  return () => clearTimeout(timeout);
 }
 
-function initSwipeCard(card, callbacks) {
-  let startX = 0, startY = 0, currentX = 0, currentY = 0, isDragging = false;
-  const stampRight = card.querySelector('.stamp-right');
-  const stampLeft = card.querySelector('.stamp-left');
-  function getPos(e) { return e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY }; }
-  function onStart(e) { isDragging = true; const pos = getPos(e); startX = pos.x; startY = pos.y; card.style.transition = 'none'; }
-  function onMove(e) {
-    if (!isDragging) return; e.preventDefault();
-    const pos = getPos(e); currentX = pos.x - startX; currentY = pos.y - startY;
-    const rotation = currentX * 0.08;
-    card.style.transform = 'translate(' + currentX + 'px, ' + currentY + 'px) rotate(' + rotation + 'deg)';
-    if (stampRight) stampRight.style.opacity = Math.max(0, Math.min(1, currentX / 100));
-    if (stampLeft) stampLeft.style.opacity = Math.max(0, Math.min(1, -currentX / 100));
-  }
-  function onEnd() {
-    if (!isDragging) return; isDragging = false;
-    card.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s';
-    if (currentX > 100) {
-      card.style.transform = 'translate(' + window.innerWidth + 'px, ' + currentY + 'px) rotate(30deg)';
-      card.style.opacity = '0';
-      setTimeout(() => callbacks.onSwipeRight && callbacks.onSwipeRight(), 300);
-    } else if (currentX < -100) {
-      card.style.transform = 'translate(' + (-window.innerWidth) + 'px, ' + currentY + 'px) rotate(-30deg)';
-      card.style.opacity = '0';
-      setTimeout(() => callbacks.onSwipeLeft && callbacks.onSwipeLeft(), 300);
-    } else if (currentY < -100) {
-      card.style.transform = 'translate(0, ' + (-window.innerHeight) + 'px) scale(0.5)';
-      card.style.opacity = '0';
-      setTimeout(() => callbacks.onSwipeUp && callbacks.onSwipeUp(), 300);
-    } else {
-      card.style.transform = 'translate(0, 0) rotate(0)';
-      if (stampRight) stampRight.style.opacity = '0';
-      if (stampLeft) stampLeft.style.opacity = '0';
+// Particle system
+function startParticles() {
+  try {
+    var canvas = document.getElementById('particles');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var mx = -1000, my = -1000;
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+    var count = Math.min(80, Math.floor(window.innerWidth * window.innerHeight / 20000));
+    for (var i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+        size: Math.random() * 2 + 0.5, op: Math.random() * 0.4 + 0.1
+      });
     }
-    currentX = 0; currentY = 0;
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+        var dx = mx - p.x, dy = my - p.y, dist = Math.sqrt(dx*dx+dy*dy);
+        if (dist < 120) { p.x -= dx * 0.008; p.y -= dy * 0.008; }
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(168,85,247,' + p.op + ')'; ctx.fill();
+        for (var j = i + 1; j < particles.length; j++) {
+          var p2 = particles[j];
+          var d2 = Math.sqrt((p.x-p2.x)*(p.x-p2.x)+(p.y-p2.y)*(p.y-p2.y));
+          if (d2 < 100) {
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = 'rgba(168,85,247,' + (0.06*(1-d2/100)) + ')';
+            ctx.lineWidth = 0.5; ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  } catch(e) {}
+}
+
+// Confetti
+var confetti = null;
+function initConfetti() {
+  try {
+    var canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var parts = [], active = false;
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+    confetti = {
+      burst: function() {
+        parts = [];
+        var colors = ['#a855f7','#ec4899','#06b6d4','#22c55e','#f59e0b','#ef4444','#fff'];
+        for (var i = 0; i < 150; i++) {
+          var angle = Math.random()*Math.PI*2, vel = Math.random()*12+4;
+          parts.push({ x:canvas.width/2, y:canvas.height/2, vx:Math.cos(angle)*vel, vy:Math.sin(angle)*vel-5,
+            color:colors[Math.floor(Math.random()*colors.length)], size:Math.random()*8+3,
+            rot:Math.random()*360, rs:(Math.random()-0.5)*10, op:1, life:0 });
+        }
+        active = true; anim();
+      }
+    };
+    function anim() {
+      if (!active) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var alive = false;
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        p.life += 1/60; if (p.life > 3) continue;
+        alive = true; p.x += p.vx; p.y += p.vy; p.vy += 0.3;
+        p.rot += p.rs; p.op = Math.max(0, 1 - p.life/3);
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot*Math.PI/180);
+        ctx.globalAlpha = p.op; ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+        ctx.restore();
+      }
+      if (alive) requestAnimationFrame(anim);
+      else { active = false; ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    }
+  } catch(e) {}
+}
+
+// Swipe card handler
+function initSwipeCard(card, cbs) {
+  var sx=0, sy=0, cx=0, cy=0, drag=false;
+  var sr = card.querySelector('.stamp-right');
+  var sl = card.querySelector('.stamp-left');
+  function pos(e) { return e.touches ? {x:e.touches[0].clientX,y:e.touches[0].clientY} : {x:e.clientX,y:e.clientY}; }
+  function onS(e) { drag=true; var p=pos(e); sx=p.x; sy=p.y; card.style.transition='none'; }
+  function onM(e) {
+    if (!drag) return; e.preventDefault();
+    var p=pos(e); cx=p.x-sx; cy=p.y-sy;
+    card.style.transform='translate('+cx+'px,'+cy+'px) rotate('+(cx*0.08)+'deg)';
+    if (sr) sr.style.opacity=Math.max(0,Math.min(1,cx/100));
+    if (sl) sl.style.opacity=Math.max(0,Math.min(1,-cx/100));
   }
-  card.addEventListener('mousedown', onStart);
-  card.addEventListener('touchstart', onStart, { passive: true });
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('touchmove', onMove, { passive: false });
-  window.addEventListener('mouseup', onEnd);
-  window.addEventListener('touchend', onEnd);
+  function onE() {
+    if (!drag) return; drag=false;
+    card.style.transition='transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s';
+    if (cx>100) {
+      card.style.transform='translate('+window.innerWidth+'px,'+cy+'px) rotate(30deg)'; card.style.opacity='0';
+      setTimeout(function(){ if(cbs.onRight) cbs.onRight(); },300);
+    } else if (cx<-100) {
+      card.style.transform='translate('+(-window.innerWidth)+'px,'+cy+'px) rotate(-30deg)'; card.style.opacity='0';
+      setTimeout(function(){ if(cbs.onLeft) cbs.onLeft(); },300);
+    } else {
+      card.style.transform='translate(0,0) rotate(0)';
+      if (sr) sr.style.opacity='0'; if (sl) sl.style.opacity='0';
+    }
+    cx=0; cy=0;
+  }
+  card.addEventListener('mousedown', onS);
+  card.addEventListener('touchstart', onS, {passive:true});
+  window.addEventListener('mousemove', onM);
+  window.addEventListener('touchmove', onM, {passive:false});
+  window.addEventListener('mouseup', onE);
+  window.addEventListener('touchend', onE);
 }
 
-// ========== UTILITY FUNCTIONS ==========
-function getGreeting() {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 17) return 'Good afternoon';
-  return 'Good evening';
-}
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
-}
-function timeAgo(dateStr) {
-  if (!dateStr) return '';
-  const diff = Math.floor((new Date() - new Date(dateStr)) / 1000);
-  if (diff < 60) return 'now';
-  if (diff < 3600) return Math.floor(diff / 60) + 'm';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h';
-  return Math.floor(diff / 86400) + 'd';
-}
-function getDefaultAvatar(name) {
-  return 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(name || 'user');
-}
-function getMatchPercentage(genres1, genres2) {
-  if (!genres1 || !genres2 || !genres1.length || !genres2.length) return Math.floor(Math.random() * 30 + 65);
-  const shared = genres1.filter(g => genres2.includes(g));
-  return Math.min(99, Math.floor((shared.length / Math.max(genres1.length, genres2.length)) * 100) + 40);
-}
-function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
-function navigate(hash) { window.location.hash = hash; }
+// ========== API ==========
+var API = {
+  signInWithGoogle: function() {
+    if (!sb) { showToast('Backend not available', 'info'); return Promise.resolve(); }
+    return sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}}).then(function(r){ if(r.error) throw r.error; }).catch(function(e){ showToast('Sign in failed: '+e.message,'error'); });
+  },
+  signInWithEmail: function(email) {
+    if (!sb) { showToast('Backend not available', 'info'); return Promise.resolve(); }
+    return sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:window.location.origin}}).then(function(r){ if(r.error) throw r.error; showToast('Magic link sent! Check your email 📧','success'); }).catch(function(e){ showToast('Failed: '+e.message,'error'); });
+  },
+  signOut: function() {
+    if (!sb) { state.user=null; state.profile=null; nav(''); return Promise.resolve(); }
+    state.realtimeChannels.forEach(function(ch){ sb.removeChannel(ch); }); state.realtimeChannels=[];
+    return sb.auth.signOut().then(function(){ state.user=null; state.profile=null; nav(''); }).catch(function(e){ showToast('Sign out failed','error'); });
+  },
+  getProfile: function(uid) {
+    if (!sb) return Promise.resolve(null);
+    return sb.from('profiles').select('*').eq('id',uid).single().then(function(r){ return r.data; }).catch(function(){ return null; });
+  },
+  updateProfile: function(uid, d) {
+    if (!sb) return Promise.resolve(d);
+    d.id = uid; d.updated_at = new Date().toISOString();
+    return sb.from('profiles').upsert(d).select().single().then(function(r){ if(r.error) throw r.error; state.profile=r.data; return r.data; }).catch(function(e){ showToast('Failed to save: '+e.message,'error'); return null; });
+  },
+  uploadAvatar: function(uid, file) {
+    if (!sb) return Promise.resolve(URL.createObjectURL(file));
+    var ext = file.name.split('.').pop();
+    var fn = uid + '/avatar.' + ext;
+    return sb.storage.from('avatars').upload(fn, file, {upsert:true}).then(function(r){ if(r.error) throw r.error; return sb.storage.from('avatars').getPublicUrl(fn).data.publicUrl + '?t='+Date.now(); }).catch(function(e){ showToast('Upload failed','error'); return null; });
+  },
+  getEvents: function(city) {
+    if (!sb) return Promise.resolve(DEMO_EVENTS);
+    var q = sb.from('events').select('*').order('event_date',{ascending:true});
+    if (city && city!=='All') q = q.eq('venue_city',city);
+    return q.then(function(r){ return (r.data && r.data.length>0) ? r.data : DEMO_EVENTS; }).catch(function(){ return DEMO_EVENTS; });
+  },
+  getProfilesForEvent: function(eventId, uid) {
+    if (!sb || (eventId && eventId.indexOf('de')===0)) return Promise.resolve([]);
+    return sb.from('swipes').select('swiped_id').eq('swiper_id',uid).eq('event_id',eventId).then(function(r){
+      var swiped = (r.data||[]).map(function(s){return s.swiped_id;}); swiped.push(uid);
+      return sb.from('event_interests').select('user_id').eq('event_id',eventId).not('user_id','in','('+swiped.join(',')+')');
+    }).then(function(r){
+      if (!r.data || r.data.length===0) return [];
+      var ids = r.data.map(function(u){return u.user_id;});
+      return sb.from('profiles').select('*').in('id',ids).then(function(r2){return r2.data||[];});
+    }).catch(function(){ return []; });
+  },
+  createSwipe: function(swiperId, swipedId, eventId, dir) {
+    if (!sb) return Promise.resolve(null);
+    return sb.from('swipes').insert({swiper_id:swiperId,swiped_id:swipedId,event_id:eventId,direction:dir}).then(function(r){
+      if(r.error) throw r.error;
+      if (dir==='right'||dir==='super') {
+        return sb.from('matches').select('*').or('and(user1_id.eq.'+swiperId+',user2_id.eq.'+swipedId+'),and(user1_id.eq.'+swipedId+',user2_id.eq.'+swiperId+')').eq('event_id',eventId).maybeSingle().then(function(r2){return r2.data;});
+      }
+      return null;
+    }).catch(function(){ return null; });
+  },
+  addEventInterest: function(uid, eid) {
+    if (!sb) { showToast('Added! 🎉','success'); return Promise.resolve(); }
+    return sb.from('event_interests').insert({user_id:uid,event_id:eid}).then(function(r){ if(r.error&&r.error.code==='23505'){showToast('Already added!','info');}else if(r.error){throw r.error;}else{showToast('Added! 🎉','success');} }).catch(function(e){showToast('Failed','error');});
+  },
+  getMatches: function(uid) {
+    if (!sb) return Promise.resolve([]);
+    return sb.from('matches').select('*, user1:profiles!matches_user1_id_fkey(*), user2:profiles!matches_user2_id_fkey(*), event:events(*)').or('user1_id.eq.'+uid+',user2_id.eq.'+uid).order('matched_at',{ascending:false}).then(function(r){return r.data||[];}).catch(function(){return [];});
+  },
+  getMessages: function(mid) {
+    if (!sb) return Promise.resolve([]);
+    return sb.from('messages').select('*').eq('match_id',mid).order('created_at',{ascending:true}).then(function(r){return r.data||[];}).catch(function(){return [];});
+  },
+  sendMessage: function(mid, sid, content) {
+    if (!sb) return Promise.resolve(null);
+    return sb.from('messages').insert({match_id:mid,sender_id:sid,content:content,read:false}).select().single().then(function(r){if(r.error)throw r.error;return r.data;}).catch(function(e){showToast('Send failed','error');return null;});
+  },
+  subMessages: function(mid, cb) {
+    if (!sb) return null;
+    var ch = sb.channel('msg:'+mid).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'match_id=eq.'+mid},function(p){cb(p.new);}).subscribe();
+    state.realtimeChannels.push(ch); return ch;
+  },
+  subMatches: function(uid, cb) {
+    if (!sb) return null;
+    var ch = sb.channel('match:'+uid).on('postgres_changes',{event:'INSERT',schema:'public',table:'matches',filter:'user1_id=eq.'+uid},function(p){cb(p.new);}).on('postgres_changes',{event:'INSERT',schema:'public',table:'matches',filter:'user2_id=eq.'+uid},function(p){cb(p.new);}).subscribe();
+    state.realtimeChannels.push(ch); return ch;
+  },
+  getTurfGames: function(sport, city) {
+    if (!sb) { var g=[].concat(DEMO_TURF); if(sport&&sport!=='All') g=g.filter(function(x){return x.sport===sport;}); return Promise.resolve(g); }
+    var q = sb.from('turf_games').select('*, creator:profiles!turf_games_creator_id_fkey(full_name,avatar_url)').order('game_date',{ascending:true});
+    if (sport&&sport!=='All') q=q.eq('sport',sport);
+    if (city) q=q.eq('location',city);
+    return q.then(function(r){return (r.data&&r.data.length>0)?r.data:DEMO_TURF;}).catch(function(){return DEMO_TURF;});
+  },
+  createTurfGame: function(d) {
+    if (!sb) { showToast('Game created! 🎉 (demo)','success'); return Promise.resolve(d); }
+    return sb.from('turf_games').insert(d).select().single().then(function(r){if(r.error)throw r.error;showToast('Game created! 🎉','success');return r.data;}).catch(function(e){showToast('Failed: '+e.message,'error');return null;});
+  },
+  joinTurfGame: function(gid, uid) {
+    if (!sb) { showToast('Joined! 🙌 (demo)','success'); return Promise.resolve(); }
+    return sb.from('turf_game_players').insert({game_id:gid,user_id:uid}).then(function(r){if(r.error&&r.error.code==='23505'){showToast('Already joined!','info');}else if(r.error){throw r.error;}else{showToast('Joined! 🙌','success');}}).catch(function(e){showToast('Failed','error');});
+  }
+};
 
-// ========== NAVIGATION COMPONENT ==========
-function renderNavigation(activePage) {
-  const items = [
-    { id: 'home', icon: '🏠', label: 'Home', hash: '#home' },
-    { id: 'swipe', icon: '🔥', label: 'Swipe', hash: '#swipe' },
-    { id: 'turf', icon: '⚽', label: 'Turf', hash: '#turf' },
-    { id: 'chat', icon: '💬', label: 'Chat', hash: '#chat' },
-    { id: 'profile', icon: '👤', label: 'Profile', hash: '#profile' }
+// ========== NAV COMPONENT ==========
+function renderNav(active) {
+  var items = [
+    {id:'home',icon:'🏠',label:'Home',hash:'#home'},
+    {id:'swipe',icon:'🔥',label:'Swipe',hash:'#swipe'},
+    {id:'turf',icon:'⚽',label:'Turf',hash:'#turf'},
+    {id:'chat',icon:'💬',label:'Chat',hash:'#chat'},
+    {id:'profile',icon:'👤',label:'Profile',hash:'#profile'}
   ];
-  const html = items.map(i => '<a class="nav-item ' + (activePage === i.id ? 'active' : '') + '" href="' + i.hash + '"><span class="nav-icon">' + i.icon + '</span><span>' + i.label + '</span></a>').join('');
-  return '<nav class="bottom-nav glass-strong">' + html + '</nav><nav class="side-nav"><div class="logo-small gradient-text">G</div>' + html + '</nav>';
+  var h = items.map(function(i){ return '<a class="nav-item'+(active===i.id?' active':'')+'" href="'+i.hash+'"><span class="nav-icon">'+i.icon+'</span><span>'+i.label+'</span></a>'; }).join('');
+  return '<nav class="bottom-nav glass-strong">'+h+'</nav><nav class="side-nav"><div class="logo-small gradient-text">G</div>'+h+'</nav>';
+}
+
+// ========== AUTH MODAL ==========
+function showAuthModal() {
+  var m = document.getElementById('modal-container');
+  if (!m) return;
+  m.style.display = 'block';
+  m.innerHTML =
+    '<div class="modal-overlay" id="auth-overlay"><div class="modal-card">' +
+    '<button class="modal-close" id="auth-close">&times;</button>' +
+    '<div class="text-center mb-24"><h2 style="font-size:28px;font-weight:800" class="gradient-text">GigMate</h2><p class="text-secondary text-sm mt-8">Find your concert buddy</p></div>' +
+    '<button class="google-btn" id="google-btn">' +
+    '<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>' +
+    'Continue with Google</button>' +
+    '<div class="divider">or</div>' +
+    '<div style="display:flex;flex-direction:column;gap:12px">' +
+    '<input type="email" class="input" id="email-inp" placeholder="Enter your email">' +
+    '<button class="btn-gradient w-full" id="magic-btn">Send Magic Link ✨</button>' +
+    '</div></div></div>';
+
+  document.getElementById('auth-close').onclick = function(){ m.style.display='none'; m.innerHTML=''; };
+  document.getElementById('auth-overlay').onclick = function(e){ if(e.target.id==='auth-overlay'){m.style.display='none'; m.innerHTML='';} };
+  document.getElementById('google-btn').onclick = function(){ API.signInWithGoogle(); };
+  document.getElementById('magic-btn').onclick = function(){
+    var email = document.getElementById('email-inp').value.trim();
+    if (!email || email.indexOf('@')<0) { showToast('Enter a valid email','error'); return; }
+    API.signInWithEmail(email);
+  };
 }
 
 // ========== PAGES ==========
 
 function landingPage() {
   return {
-    html: '<div class="relative overflow-hidden">' +
+    html:
+      '<div class="relative overflow-hidden">' +
       '<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>' +
-      '<nav class="landing-nav" id="landing-nav"><div class="logo"><span class="gradient-text">GigMate</span> 🎵</div><button class="btn-outline" id="nav-signin-btn">Sign In</button></nav>' +
+      '<nav class="landing-nav" id="lnav"><div class="logo"><span class="gradient-text">GigMate</span> 🎵</div><button class="btn-outline" id="nav-sign">Sign In</button></nav>' +
       '<section class="landing-hero">' +
         '<h1 data-reveal><span class="gradient-text">Find Your People.</span><br>Feel The Music<br>Together.</h1>' +
-        '<p class="subtitle" data-reveal><span id="typewriter-text"></span><span class="typewriter-cursor"></span></p>' +
-        '<button class="btn-gradient" id="hero-cta-btn" data-reveal style="font-size:18px;padding:18px 40px">Get Started — It\'s Free ✨</button>' +
-        '<div class="scroll-arrow" onclick="document.getElementById(\'stats-section\').scrollIntoView({behavior:\'smooth\'})">↓</div>' +
+        '<p class="subtitle" data-reveal><span id="tw-text"></span><span class="typewriter-cursor"></span></p>' +
+        '<button class="btn-gradient" id="hero-cta" data-reveal style="font-size:18px;padding:18px 40px">Get Started — It\'s Free ✨</button>' +
+        '<div class="scroll-arrow" id="scroll-arr">↓</div>' +
       '</section>' +
-      '<section class="landing-stats" id="stats-section" data-reveal>' +
+      '<section class="landing-stats" id="stats-sec" data-reveal>' +
         '<div class="landing-stat"><div class="number gradient-text" data-count="10000">0</div><div class="label">Music Lovers</div></div>' +
         '<div class="landing-stat"><div class="number gradient-text" data-count="500">0</div><div class="label">Events</div></div>' +
         '<div class="landing-stat"><div class="number gradient-text" data-count="50">0</div><div class="label">Cities</div></div>' +
@@ -1302,665 +1066,867 @@ function landingPage() {
       '</section>' +
       '<section style="padding:40px 20px;max-width:900px;margin:0 auto">' +
         '<h2 style="font-size:28px;font-weight:800;margin-bottom:24px;text-align:center" data-reveal>Upcoming Events</h2>' +
-        '<div class="h-scroll" id="landing-events"><div class="skeleton" style="min-width:260px;height:180px;border-radius:16px"></div><div class="skeleton" style="min-width:260px;height:180px;border-radius:16px"></div><div class="skeleton" style="min-width:260px;height:180px;border-radius:16px"></div></div>' +
+        '<div class="h-scroll" id="land-events"></div>' +
       '</section>' +
       '<section style="padding:60px 20px;text-align:center"><h2 style="font-size:28px;font-weight:800;margin-bottom:32px" data-reveal>What People Say</h2>' +
         '<div class="testimonial-grid">' +
-          '<div class="testimonial-card glass" data-reveal><div class="stars">⭐⭐⭐⭐⭐</div><p class="quote">"Found my concert buddy for Arijit Singh live in Mumbai. We\'ve been to 5 shows together since! Best app ever."</p><div class="author">— Rohit, Mumbai</div></div>' +
-          '<div class="testimonial-card glass" data-reveal><div class="stars">⭐⭐⭐⭐⭐</div><p class="quote">"My friends don\'t get indie music. GigMate connected me with people who actually appreciate Prateek Kuhad. Finally!"</p><div class="author">— Kavya, Bangalore</div></div>' +
-          '<div class="testimonial-card glass" data-reveal><div class="stars">⭐⭐⭐⭐⭐</div><p class="quote">"Found a full cricket team through the turf feature. We play every Sunday now. This app is a game changer 🏏"</p><div class="author">— Aditya, Delhi NCR</div></div>' +
+          '<div class="testimonial-card glass" data-reveal><div class="stars">⭐⭐⭐⭐⭐</div><p class="quote">"Found my concert buddy for Arijit Singh live in Mumbai. We\'ve been to 5 shows together since!"</p><div class="author">— Rohit, Mumbai</div></div>' +
+          '<div class="testimonial-card glass" data-reveal><div class="stars">⭐⭐⭐⭐⭐</div><p class="quote">"My friends don\'t get indie music. GigMate connected me with people who actually appreciate Prateek Kuhad."</p><div class="author">— Kavya, Bangalore</div></div>' +
+          '<div class="testimonial-card glass" data-reveal><div class="stars">⭐⭐⭐⭐⭐</div><p class="quote">"Found a full cricket team through the turf feature. We play every Sunday now. Game changer 🏏"</p><div class="author">— Aditya, Delhi NCR</div></div>' +
         '</div>' +
       '</section>' +
-      '<footer class="footer" data-reveal><p>Made with ❤️ in India</p><p style="margin-top:8px;font-size:12px;color:var(--text-secondary)">© 2025 GigMate. All rights reserved.</p></footer>' +
-    '</div>',
-    init() {
-      const twEl = document.getElementById('typewriter-text');
-      if (twEl) typewriter(twEl, ['Swipe to find concert buddies 🎶', 'Never go to a gig alone again 🤝', 'Find turf partners near you ⚽', 'Connect over music you love 💜']);
+      '<footer class="footer" data-reveal><p>Made with ❤️ in India</p><p style="margin-top:8px;font-size:12px">© 2025 GigMate. All rights reserved.</p></footer>' +
+      '</div>',
+    init: function() {
+      typewriter(document.getElementById('tw-text'), ['Swipe to find concert buddies 🎶','Never go to a gig alone again 🤝','Find turf partners near you ⚽','Connect over music you love 💜']);
       scrollReveal();
-      document.getElementById('nav-signin-btn')?.addEventListener('click', showAuthModal);
-      document.getElementById('hero-cta-btn')?.addEventListener('click', showAuthModal);
-      window.addEventListener('scroll', function scrollHandler() {
-        const nav = document.getElementById('landing-nav');
-        if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
+      var nsb = document.getElementById('nav-sign');
+      var hcta = document.getElementById('hero-cta');
+      if (nsb) nsb.onclick = showAuthModal;
+      if (hcta) hcta.onclick = showAuthModal;
+      var sa = document.getElementById('scroll-arr');
+      if (sa) sa.onclick = function() { var s = document.getElementById('stats-sec'); if(s) s.scrollIntoView({behavior:'smooth'}); };
+      window.addEventListener('scroll', function() {
+        var n = document.getElementById('lnav');
+        if (n) n.classList.toggle('scrolled', window.scrollY > 50);
       });
-      const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll('[data-count]').forEach(el => animateCounter(el, parseInt(el.dataset.count)));
-            statsObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.3 });
-      const ss = document.getElementById('stats-section');
-      if (ss) statsObserver.observe(ss);
-      API.getEvents().then(events => {
-        const container = document.getElementById('landing-events');
-        if (!container) return;
-        const evts = events.length > 0 ? events : DEMO_EVENTS;
-        container.innerHTML = evts.slice(0, 8).map(ev =>
-          '<div class="event-card" style="min-width:260px;height:180px;background:var(--surface);border:1px solid var(--border)">' +
-            (ev.poster_image_url ? '<img src="' + ev.poster_image_url + '" alt="" onerror="this.style.display=\'none\'">' : '<div style="position:absolute;inset:0;background:var(--gradient);opacity:0.1"></div>') +
+      try {
+        var so = new IntersectionObserver(function(entries) {
+          entries.forEach(function(en) {
+            if (en.isIntersecting) {
+              en.target.querySelectorAll('[data-count]').forEach(function(el){ animateCounter(el, parseInt(el.dataset.count)); });
+              so.unobserve(en.target);
+            }
+          });
+        }, {threshold:0.3});
+        var ss = document.getElementById('stats-sec');
+        if (ss) so.observe(ss);
+      } catch(e){}
+      // Load events
+      API.getEvents().then(function(events) {
+        var c = document.getElementById('land-events');
+        if (!c) return;
+        var evts = (events && events.length > 0) ? events : DEMO_EVENTS;
+        c.innerHTML = evts.slice(0,8).map(function(ev){
+          var bg = ev.poster_image_url ? '<img src="'+ev.poster_image_url+'" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">' : '<div style="position:absolute;inset:0;background:var(--gradient);opacity:0.1"></div>';
+          return '<div class="event-card" style="min-width:260px;height:180px;background:var(--surface);border:1px solid var(--border)">' +
+            bg +
             '<div class="event-overlay">' +
-              '<div style="font-size:11px;color:var(--primary);font-weight:600;margin-bottom:4px">' + (ev.genre || 'Music') + '</div>' +
-              '<h4 style="font-weight:700;font-size:15px;margin-bottom:4px">' + ev.title + '</h4>' +
-              '<p style="font-size:12px;color:var(--text-secondary)">' + (ev.venue_city || '') + ' · ' + formatDate(ev.event_date) + '</p>' +
-            '</div></div>'
-        ).join('');
+              '<div style="font-size:11px;color:var(--primary);font-weight:600;margin-bottom:4px">'+(ev.genre||'Music')+'</div>' +
+              '<h4 style="font-weight:700;font-size:15px;margin-bottom:4px">'+ev.title+'</h4>' +
+              '<p style="font-size:12px;color:var(--text-secondary)">'+(ev.venue_city||'')+' · '+fmtDate(ev.event_date)+'</p>' +
+            '</div></div>';
+        }).join('');
       });
     }
-  };
-}
-
-function showAuthModal() {
-  const modal = document.getElementById('modal-container');
-  modal.style.display = 'block';
-  modal.innerHTML =
-    '<div class="modal-overlay" id="auth-overlay"><div class="modal-card">' +
-      '<button class="modal-close" id="auth-close">&times;</button>' +
-      '<div class="text-center mb-24"><h2 style="font-size:28px;font-weight:800" class="gradient-text">GigMate</h2><p class="text-secondary text-sm mt-8">Find your concert buddy</p></div>' +
-      '<button class="google-btn" id="google-signin-btn">' +
-        '<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>' +
-        'Continue with Google</button>' +
-      '<div class="divider">or</div>' +
-      '<div style="display:flex;flex-direction:column;gap:12px">' +
-        '<input type="email" class="input" id="email-input" placeholder="Enter your email">' +
-        '<button class="btn-gradient w-full" id="magic-link-btn">Send Magic Link ✨</button>' +
-      '</div>' +
-    '</div></div>';
-
-  document.getElementById('auth-close').onclick = () => { modal.style.display = 'none'; modal.innerHTML = ''; };
-  document.getElementById('auth-overlay').onclick = (e) => { if (e.target.id === 'auth-overlay') { modal.style.display = 'none'; modal.innerHTML = ''; } };
-  document.getElementById('google-signin-btn').onclick = () => API.signInWithGoogle();
-  document.getElementById('magic-link-btn').onclick = () => {
-    const email = document.getElementById('email-input').value.trim();
-    if (!email || !email.includes('@')) { showToast('Enter a valid email', 'error'); return; }
-    API.signInWithEmail(email);
   };
 }
 
 function onboardingPage() {
   return {
-    html: '<div class="page-container" style="max-width:480px;min-height:100vh;display:flex;flex-direction:column">' +
-      '<div class="progress-bar mb-24" style="margin-top:20px"><div class="progress-fill" id="onb-progress" style="width:14.28%"></div></div>' +
-      '<div id="onb-content" style="flex:1;display:flex;flex-direction:column;justify-content:center"></div>' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0">' +
-        '<button class="btn-outline" id="onb-back" style="visibility:hidden">← Back</button>' +
-        '<button class="btn-gradient" id="onb-next" disabled>Next →</button>' +
-      '</div></div>',
-    init() {
-      let step = 1;
-      const totalSteps = 7;
-      const data = { full_name: '', city: '', favorite_genres: [], energy_level: 5, concert_persona: '', avatar_url: '', bio: '' };
+    html:
+      '<div class="page-container" style="max-width:480px;min-height:100vh;display:flex;flex-direction:column">' +
+        '<div class="progress-bar mb-24" style="margin-top:20px"><div class="progress-fill" id="onb-prog" style="width:14.28%"></div></div>' +
+        '<div id="onb-content" style="flex:1;display:flex;flex-direction:column;justify-content:center"></div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0">' +
+          '<button class="btn-outline" id="onb-back" style="visibility:hidden">← Back</button>' +
+          '<button class="btn-gradient" id="onb-next" disabled>Next →</button>' +
+        '</div>' +
+      '</div>',
+    init: function() {
+      var step = 1, total = 7;
+      var data = {full_name:'',city:'',favorite_genres:[],energy_level:5,concert_persona:'',avatar_url:'',bio:''};
 
-      function renderStep() {
-        const content = document.getElementById('onb-content');
-        const progress = document.getElementById('onb-progress');
-        const backBtn = document.getElementById('onb-back');
-        const nextBtn = document.getElementById('onb-next');
-        if (!content) return;
-        progress.style.width = ((step / totalSteps) * 100) + '%';
-        backBtn.style.visibility = step === 1 ? 'hidden' : 'visible';
-        nextBtn.textContent = step === totalSteps ? "Let's Go! 🚀" : 'Next →';
+      function render() {
+        var c = document.getElementById('onb-content');
+        var prog = document.getElementById('onb-prog');
+        var bb = document.getElementById('onb-back');
+        var nb = document.getElementById('onb-next');
+        if (!c) return;
+        prog.style.width = ((step/total)*100)+'%';
+        bb.style.visibility = step===1?'hidden':'visible';
+        nb.textContent = step===total?"Let's Go! 🚀":'Next →';
 
-        if (step === 1) {
-          content.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">👋</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">What should we call you?</h2><p class="text-secondary mb-24">Your first name is perfect</p><input type="text" class="input" id="onb-name" placeholder="Your name" value="' + data.full_name + '" style="text-align:center;font-size:20px;max-width:300px;margin:0 auto"></div>';
-          setTimeout(() => {
-            const inp = document.getElementById('onb-name');
-            if (inp) { inp.focus(); inp.oninput = (e) => { data.full_name = e.target.value; updateNext(); }; }
-          }, 100);
-        } else if (step === 2) {
-          content.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">📍</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Pick your city</h2><p class="text-secondary mb-24">We\'ll show you nearby events</p><div class="grid-3" style="max-width:400px;margin:0 auto">' + INDIAN_CITIES.map(c => '<div class="city-card ' + (data.city === c ? 'active' : '') + '" data-city="' + c + '">' + c + '</div>').join('') + '</div></div>';
-          document.querySelectorAll('.city-card').forEach(card => {
-            card.onclick = () => { document.querySelectorAll('.city-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); data.city = card.dataset.city; updateNext(); };
+        if (step===1) {
+          c.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">👋</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">What should we call you?</h2><p class="text-secondary mb-24">Your first name is perfect</p><input type="text" class="input" id="onb-name" placeholder="Your name" value="'+esc(data.full_name)+'" style="text-align:center;font-size:20px;max-width:300px;margin:0 auto"></div>';
+          setTimeout(function(){ var inp=document.getElementById('onb-name'); if(inp){inp.focus();inp.oninput=function(e){data.full_name=e.target.value;upd();};} },100);
+        } else if (step===2) {
+          c.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">📍</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Pick your city</h2><p class="text-secondary mb-24">We\'ll show you nearby events</p><div class="grid-3" style="max-width:400px;margin:0 auto">'+CITIES.map(function(ct){return '<div class="city-card'+(data.city===ct?' active':'')+'" data-city="'+ct+'">'+ct+'</div>';}).join('')+'</div></div>';
+          document.querySelectorAll('.city-card').forEach(function(cd){
+            cd.onclick=function(){document.querySelectorAll('.city-card').forEach(function(x){x.classList.remove('active');});cd.classList.add('active');data.city=cd.dataset.city;upd();};
           });
-        } else if (step === 3) {
-          content.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">🎵</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">What music are you into?</h2><p class="text-secondary mb-24">Pick up to 5 genres</p><div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:450px;margin:0 auto">' + MUSIC_GENRES.map(g => '<div class="genre-pill ' + (data.favorite_genres.includes(g) ? 'active' : '') + '" data-genre="' + g + '">' + g + '</div>').join('') + '</div><p class="text-secondary text-xs mt-16" id="genre-count">' + data.favorite_genres.length + '/5 selected</p></div>';
-          document.querySelectorAll('.genre-pill').forEach(pill => {
-            pill.onclick = () => {
-              const genre = pill.dataset.genre;
-              if (data.favorite_genres.includes(genre)) { data.favorite_genres = data.favorite_genres.filter(g => g !== genre); pill.classList.remove('active'); }
-              else if (data.favorite_genres.length < 5) { data.favorite_genres.push(genre); pill.classList.add('active'); }
-              else { showToast('Max 5 genres!', 'info'); return; }
-              document.getElementById('genre-count').textContent = data.favorite_genres.length + '/5 selected';
-              updateNext();
+        } else if (step===3) {
+          c.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">🎵</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">What music are you into?</h2><p class="text-secondary mb-24">Pick up to 5 genres</p><div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:450px;margin:0 auto">'+GENRES.map(function(g){return '<div class="genre-pill'+(data.favorite_genres.indexOf(g)>=0?' active':'')+'" data-genre="'+g+'">'+g+'</div>';}).join('')+'</div><p class="text-secondary text-xs mt-16" id="gc">'+data.favorite_genres.length+'/5 selected</p></div>';
+          document.querySelectorAll('.genre-pill').forEach(function(p){
+            p.onclick=function(){
+              var g=p.dataset.genre;
+              var idx=data.favorite_genres.indexOf(g);
+              if(idx>=0){data.favorite_genres.splice(idx,1);p.classList.remove('active');}
+              else if(data.favorite_genres.length<5){data.favorite_genres.push(g);p.classList.add('active');}
+              else{showToast('Max 5 genres!','info');return;}
+              document.getElementById('gc').textContent=data.favorite_genres.length+'/5 selected';
+              upd();
             };
           });
-        } else if (step === 4) {
-          const vibeLabels = ['☁️ Super Chill', '😌 Chill Macha', '🙂 Easy Going', '😊 Moderate', '🤩 Getting There', '🔥 Energetic', '💃 Party Mode', '🕺 Full Energy', '⚡ Insane', '🤯 Full Paagal'];
-          content.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">⚡</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Your vibe level?</h2><p class="text-secondary mb-24">How crazy do you get at events?</p><div style="max-width:350px;margin:0 auto"><div id="vibe-label" style="font-size:24px;font-weight:700;margin-bottom:20px;min-height:40px">' + vibeLabels[data.energy_level - 1] + '</div><input type="range" min="1" max="10" value="' + data.energy_level + '" id="vibe-slider"><div style="display:flex;justify-content:space-between;margin-top:8px"><span class="text-secondary text-xs">Chill</span><span class="text-secondary text-xs">Paagal</span></div></div></div>';
-          const slider = document.getElementById('vibe-slider');
-          if (slider) slider.oninput = (e) => { data.energy_level = parseInt(e.target.value); document.getElementById('vibe-label').textContent = vibeLabels[data.energy_level - 1]; updateNext(); };
-        } else if (step === 5) {
-          content.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">🎭</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Your concert persona</h2><p class="text-secondary mb-24">Which one describes you best?</p><div class="grid-2" style="max-width:450px;margin:0 auto">' + CONCERT_PERSONAS.map(p => { const val = p.emoji + ' ' + p.title; return '<div class="persona-card ' + (data.concert_persona === val ? 'active' : '') + '" data-persona="' + val + '"><span class="persona-emoji">' + p.emoji + '</span><div class="persona-title">' + p.title + '</div><div class="persona-desc">' + p.desc + '</div></div>'; }).join('') + '</div></div>';
-          document.querySelectorAll('.persona-card').forEach(card => {
-            card.onclick = () => { document.querySelectorAll('.persona-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); data.concert_persona = card.dataset.persona; updateNext(); };
+        } else if (step===4) {
+          var vl = ['\u2601\uFE0F Super Chill','😌 Chill Macha','🙂 Easy Going','😊 Moderate','🤩 Getting There','🔥 Energetic','💃 Party Mode','🕺 Full Energy','⚡ Insane','🤯 Full Paagal'];
+          c.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">⚡</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Your vibe level?</h2><p class="text-secondary mb-24">How crazy do you get at events?</p><div style="max-width:350px;margin:0 auto"><div id="vl" style="font-size:24px;font-weight:700;margin-bottom:20px;min-height:40px">'+vl[data.energy_level-1]+'</div><input type="range" min="1" max="10" value="'+data.energy_level+'" id="vs"><div style="display:flex;justify-content:space-between;margin-top:8px"><span class="text-secondary text-xs">Chill</span><span class="text-secondary text-xs">Paagal</span></div></div></div>';
+          var sl = document.getElementById('vs');
+          if(sl) sl.oninput=function(e){data.energy_level=parseInt(e.target.value);document.getElementById('vl').textContent=vl[data.energy_level-1];upd();};
+        } else if (step===5) {
+          c.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">🎭</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Your concert persona</h2><p class="text-secondary mb-24">Which one describes you best?</p><div class="grid-2" style="max-width:450px;margin:0 auto">'+PERSONAS.map(function(p){var v=p.emoji+' '+p.title;return '<div class="persona-card'+(data.concert_persona===v?' active':'')+'" data-p="'+v+'"><span class="persona-emoji">'+p.emoji+'</span><div class="persona-title">'+p.title+'</div><div class="persona-desc">'+p.desc+'</div></div>';}).join('')+'</div></div>';
+          document.querySelectorAll('.persona-card').forEach(function(cd){
+            cd.onclick=function(){document.querySelectorAll('.persona-card').forEach(function(x){x.classList.remove('active');});cd.classList.add('active');data.concert_persona=cd.dataset.p;upd();};
           });
-        } else if (step === 6) {
-          content.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">📸</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Add a photo</h2><p class="text-secondary mb-24">Let people know who they\'re vibing with</p><div class="upload-zone ' + (data.avatar_url ? 'has-preview' : '') + '" id="upload-zone" style="max-width:300px;margin:0 auto"><img class="upload-preview" id="avatar-preview" src="' + (data.avatar_url || '') + '" alt=""><div class="upload-text"><div style="font-size:40px;margin-bottom:8px">📁</div><p class="text-secondary">Drag & drop or click to upload</p></div><input type="file" accept="image/*" id="avatar-input" style="display:none"></div><p class="text-secondary text-xs mt-8">Or skip for now</p></div>';
-          const zone = document.getElementById('upload-zone');
-          const fileInput = document.getElementById('avatar-input');
-          zone.onclick = () => fileInput.click();
-          zone.ondragover = (e) => { e.preventDefault(); zone.classList.add('dragover'); };
-          zone.ondragleave = () => zone.classList.remove('dragover');
-          zone.ondrop = (e) => { e.preventDefault(); zone.classList.remove('dragover'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); };
-          fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
-          async function handleFile(file) {
-            const preview = document.getElementById('avatar-preview');
-            const reader = new FileReader();
-            reader.onload = (e) => { preview.src = e.target.result; zone.classList.add('has-preview'); };
+        } else if (step===6) {
+          c.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">📸</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Add a photo</h2><p class="text-secondary mb-24">Let people know who they\'re vibing with</p><div class="upload-zone'+(data.avatar_url?' has-preview':'')+'" id="uz" style="max-width:300px;margin:0 auto"><img class="upload-preview" id="ap" src="'+(data.avatar_url||'')+'" alt=""><div class="upload-text"><div style="font-size:40px;margin-bottom:8px">📁</div><p class="text-secondary">Drag & drop or click to upload</p></div><input type="file" accept="image/*" id="ai" style="display:none"></div><p class="text-secondary text-xs mt-8">Or skip for now</p></div>';
+          var zone = document.getElementById('uz');
+          var fi = document.getElementById('ai');
+          zone.onclick=function(){fi.click();};
+          zone.ondragover=function(e){e.preventDefault();zone.classList.add('dragover');};
+          zone.ondragleave=function(){zone.classList.remove('dragover');};
+          zone.ondrop=function(e){e.preventDefault();zone.classList.remove('dragover');if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);};
+          fi.onchange=function(e){if(e.target.files[0])handleFile(e.target.files[0]);};
+          function handleFile(file){
+            var pr = document.getElementById('ap');
+            var reader = new FileReader();
+            reader.onload=function(e){pr.src=e.target.result;zone.classList.add('has-preview');};
             reader.readAsDataURL(file);
-            if (state.user) {
-              showToast('Uploading...', 'info');
-              const url = await API.uploadAvatar(state.user.id, file);
-              if (url) { data.avatar_url = url; showToast('Photo uploaded!', 'success'); }
-            } else {
-              data.avatar_url = URL.createObjectURL(file);
-            }
-            updateNext();
+            if(state.user){
+              showToast('Uploading...','info');
+              API.uploadAvatar(state.user.id,file).then(function(url){if(url){data.avatar_url=url;showToast('Photo uploaded!','success');}upd();});
+            } else { data.avatar_url=URL.createObjectURL(file); upd(); }
           }
-        } else if (step === 7) {
-          content.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">✍️</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Write a one-liner bio</h2><p class="text-secondary mb-24">Something fun that describes you</p><textarea class="input" id="onb-bio" placeholder="e.g., Looking for someone to headbang at the next Local Train gig 🤘" maxlength="150" style="max-width:400px;margin:0 auto;height:120px">' + data.bio + '</textarea><p class="text-secondary text-xs mt-8"><span id="bio-count">' + data.bio.length + '</span>/150</p></div>';
-          const ta = document.getElementById('onb-bio');
-          if (ta) { ta.focus(); ta.oninput = (e) => { data.bio = e.target.value; document.getElementById('bio-count').textContent = data.bio.length; updateNext(); }; }
+        } else if (step===7) {
+          c.innerHTML = '<div class="page-enter text-center"><div style="font-size:48px;margin-bottom:16px">✍️</div><h2 style="font-size:28px;font-weight:800;margin-bottom:8px">Write a one-liner bio</h2><p class="text-secondary mb-24">Something fun that describes you</p><textarea class="input" id="onb-bio" placeholder="e.g., Looking for someone to headbang at the next Local Train gig 🤘" maxlength="150" style="max-width:400px;margin:0 auto;height:120px">'+esc(data.bio)+'</textarea><p class="text-secondary text-xs mt-8"><span id="bc">'+data.bio.length+'</span>/150</p></div>';
+          var ta=document.getElementById('onb-bio');
+          if(ta){ta.focus();ta.oninput=function(e){data.bio=e.target.value;document.getElementById('bc').textContent=data.bio.length;upd();};}
         }
-        updateNext();
+        upd();
       }
 
-      function updateNext() {
-        const btn = document.getElementById('onb-next');
-        if (!btn) return;
-        let valid = false;
-        if (step === 1) valid = data.full_name.trim().length >= 2;
-        else if (step === 2) valid = data.city.length > 0;
-        else if (step === 3) valid = data.favorite_genres.length >= 1;
-        else if (step === 4) valid = true;
-        else if (step === 5) valid = data.concert_persona.length > 0;
-        else if (step === 6) valid = true;
-        else if (step === 7) valid = true;
-        btn.disabled = !valid;
+      function upd(){
+        var btn=document.getElementById('onb-next');if(!btn)return;
+        var v=false;
+        if(step===1) v=data.full_name.trim().length>=2;
+        else if(step===2) v=data.city.length>0;
+        else if(step===3) v=data.favorite_genres.length>=1;
+        else if(step===4) v=true;
+        else if(step===5) v=data.concert_persona.length>0;
+        else if(step===6) v=true;
+        else if(step===7) v=true;
+        btn.disabled=!v;
       }
 
-      document.getElementById('onb-next').onclick = async () => {
-        if (step < totalSteps) { step++; renderStep(); }
+      document.getElementById('onb-next').onclick = function(){
+        if(step<total){step++;render();}
         else {
-          const btn = document.getElementById('onb-next');
-          btn.textContent = 'Saving...'; btn.disabled = true;
-          if (state.user) {
-            await API.updateProfile(state.user.id, {
-              full_name: data.full_name.trim(), city: data.city, favorite_genres: data.favorite_genres,
-              energy_level: data.energy_level, concert_persona: data.concert_persona,
-              avatar_url: data.avatar_url || getDefaultAvatar(data.full_name),
-              bio: data.bio.trim() || (data.concert_persona.split('—')[0].trim() + ' vibes only ✨')
-            });
+          var btn=document.getElementById('onb-next');
+          btn.textContent='Saving...';btn.disabled=true;
+          var profileData = {
+            full_name:data.full_name.trim(), city:data.city, favorite_genres:data.favorite_genres,
+            energy_level:data.energy_level, concert_persona:data.concert_persona,
+            avatar_url:data.avatar_url||defAvatar(data.full_name),
+            bio:data.bio.trim()||'Music lover ✨'
+          };
+          if(state.user){
+            API.updateProfile(state.user.id,profileData).then(function(){showToast('Welcome to GigMate! 🎉','success');nav('#home');});
           } else {
-            state.profile = { full_name: data.full_name.trim(), city: data.city, favorite_genres: data.favorite_genres, energy_level: data.energy_level, concert_persona: data.concert_persona, avatar_url: data.avatar_url || getDefaultAvatar(data.full_name), bio: data.bio.trim() || 'Music lover ✨', total_events: 0, total_matches: 0, rating_avg: null };
+            state.profile=profileData;
+            showToast('Welcome to GigMate! 🎉','success');nav('#home');
           }
-          showToast('Welcome to GigMate! 🎉', 'success');
-          navigate('#home');
         }
       };
-      document.getElementById('onb-back').onclick = () => { if (step > 1) { step--; renderStep(); } };
-      renderStep();
+      document.getElementById('onb-back').onclick=function(){if(step>1){step--;render();}};
+      render();
     }
   };
 }
 
 function homePage() {
-  const profile = state.profile;
-  const name = profile?.full_name || 'there';
+  var p = state.profile;
+  var name = p ? p.full_name : 'there';
   return {
-    html: '<div class="main-content"><div class="page-container page-enter">' +
-      '<div style="margin-bottom:24px" data-animate><p class="text-secondary text-sm">' + getGreeting() + ' 👋</p><h1 style="font-size:28px;font-weight:800">' + name + '</h1></div>' +
-      '<div id="featured-event" class="mb-24" data-animate><div class="skeleton" style="height:200px;border-radius:16px"></div></div>' +
-      '<div data-animate><div class="flex justify-between items-center mb-16"><h2 class="section-title" style="margin:0">This Week 🎵</h2><a href="#swipe" style="color:var(--primary);font-size:13px;font-weight:500">See all →</a></div><div class="h-scroll" id="home-events"><div class="skeleton" style="min-width:200px;height:160px;border-radius:16px"></div><div class="skeleton" style="min-width:200px;height:160px;border-radius:16px"></div></div></div>' +
-      '<div data-animate style="margin-top:32px"><div class="flex justify-between items-center mb-16"><h2 class="section-title" style="margin:0">Pickup Games ⚽</h2><a href="#turf" style="color:var(--primary);font-size:13px;font-weight:500">See all →</a></div><div id="home-turf" class="flex flex-col gap-12"><div class="skeleton" style="height:100px;border-radius:16px"></div></div></div>' +
-      '<div style="height:80px"></div></div>' + renderNavigation('home') + '</div>',
-    async init() {
+    html:
+      '<div class="main-content"><div class="page-container page-enter">' +
+        '<div style="margin-bottom:24px" data-animate><p class="text-secondary text-sm">'+greeting()+' 👋</p><h1 style="font-size:28px;font-weight:800">'+esc(name)+'</h1></div>' +
+        '<div id="feat-ev" class="mb-24" data-animate><div class="skeleton" style="height:200px;border-radius:16px"></div></div>' +
+        '<div data-animate><div class="flex justify-between items-center mb-16"><h2 class="section-title" style="margin:0">This Week 🎵</h2><a href="#swipe" style="color:var(--primary);font-size:13px;font-weight:500">See all →</a></div><div class="h-scroll" id="home-ev"></div></div>' +
+        '<div data-animate style="margin-top:32px"><div class="flex justify-between items-center mb-16"><h2 class="section-title" style="margin:0">Pickup Games ⚽</h2><a href="#turf" style="color:var(--primary);font-size:13px;font-weight:500">See all →</a></div><div id="home-turf" class="flex flex-col gap-12"></div></div>' +
+        '<div style="height:80px"></div>' +
+      '</div>' + renderNav('home') + '</div>',
+    init: function() {
       staggerIn(document.querySelector('.page-container'));
-      const city = state.profile?.city;
-      const events = await API.getEvents(city);
-      const featuredContainer = document.getElementById('featured-event');
-      if (featuredContainer && events.length > 0) {
-        const feat = events[0];
-        featuredContainer.innerHTML = '<div class="card" style="position:relative;overflow:hidden;border-radius:16px;height:200px;cursor:pointer" onclick="navigate(\'#swipe\')">' +
-          '<div style="position:absolute;inset:0;background:var(--gradient);opacity:0.15"></div>' +
-          (feat.poster_image_url ? '<img src="' + feat.poster_image_url + '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.3" onerror="this.style.display=\'none\'">' : '') +
-          '<div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,0.8))"></div>' +
-          '<div style="position:absolute;bottom:0;left:0;right:0;padding:20px"><span class="badge badge-primary" style="margin-bottom:8px">🔥 Featured</span><h3 style="font-size:20px;font-weight:700">' + feat.title + '</h3><p class="text-secondary text-sm">' + (feat.artist_name || '') + ' · ' + (feat.venue_city || '') + ' · ' + formatDate(feat.event_date) + '</p></div></div>';
-      } else if (featuredContainer) {
-        featuredContainer.innerHTML = '<div class="card" style="padding:32px;text-align:center;border-radius:16px"><div style="font-size:40px;margin-bottom:8px">🎵</div><h3 style="font-weight:700">Discover events</h3><p class="text-secondary text-sm">Browse concerts and festivals happening near you</p></div>';
-      }
-      const eventsContainer = document.getElementById('home-events');
-      if (eventsContainer) {
-        if (events.length > 1) {
-          eventsContainer.innerHTML = events.slice(1, 8).map(ev => '<div class="event-card" style="min-width:200px;height:160px;background:var(--surface);border:1px solid var(--border)" onclick="navigate(\'#swipe\')">' + (ev.poster_image_url ? '<img src="' + ev.poster_image_url + '" alt="" onerror="this.style.display=\'none\'">' : '<div style="position:absolute;inset:0;background:var(--gradient);opacity:0.08"></div>') + '<div class="event-overlay"><div style="font-size:10px;color:var(--primary);font-weight:600;margin-bottom:2px">' + (ev.genre || 'Music') + '</div><h4 style="font-weight:700;font-size:14px;margin-bottom:2px;line-height:1.2">' + ev.title + '</h4><p style="font-size:11px;color:var(--text-secondary)">' + formatDate(ev.event_date) + '</p></div></div>').join('');
-        } else {
-          eventsContainer.innerHTML = '<p class="text-secondary text-sm" style="padding:20px">Explore events in the Swipe tab!</p>';
+      var city = state.profile ? state.profile.city : null;
+      API.getEvents(city).then(function(events) {
+        var fc = document.getElementById('feat-ev');
+        if (fc && events.length > 0) {
+          var f = events[0];
+          fc.innerHTML = '<div class="card" style="position:relative;overflow:hidden;border-radius:16px;height:200px;cursor:pointer" onclick="window.location.hash=\'#swipe\'">' +
+            '<div style="position:absolute;inset:0;background:var(--gradient);opacity:0.15"></div>' +
+            (f.poster_image_url ? '<img src="'+f.poster_image_url+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.3" onerror="this.style.display=\'none\'">' : '') +
+            '<div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,0.8))"></div>' +
+            '<div style="position:absolute;bottom:0;left:0;right:0;padding:20px"><span class="badge badge-primary" style="margin-bottom:8px">🔥 Featured</span><h3 style="font-size:20px;font-weight:700">'+f.title+'</h3><p class="text-secondary text-sm">'+(f.artist_name||'')+' · '+(f.venue_city||'')+' · '+fmtDate(f.event_date)+'</p></div></div>';
         }
-      }
-      const turfGames = await API.getTurfGames(null, null);
-      const turfContainer = document.getElementById('home-turf');
-      if (turfContainer) {
-        if (turfGames.length > 0) {
-          turfContainer.innerHTML = turfGames.slice(0, 3).map(game => '<div class="turf-card" style="cursor:pointer" onclick="navigate(\'#turf\')"><div class="flex justify-between items-center"><div class="flex items-center gap-12"><span style="font-size:28px">' + (SPORT_EMOJIS[game.sport] || '🏆') + '</span><div><h4 style="font-weight:600;font-size:15px">' + game.sport + '</h4><p class="text-secondary text-xs">' + (game.venue_name || game.location) + ' · ' + formatDate(game.game_date) + '</p></div></div><span class="badge badge-cyan">' + (game.players_needed || '?') + ' needed</span></div></div>').join('');
-        } else {
-          turfContainer.innerHTML = '<p class="text-secondary text-sm">No games scheduled yet</p>';
+        var ec = document.getElementById('home-ev');
+        if (ec) {
+          if (events.length > 1) {
+            ec.innerHTML = events.slice(1,8).map(function(ev){
+              return '<div class="event-card" style="min-width:200px;height:160px;background:var(--surface);border:1px solid var(--border)" onclick="window.location.hash=\'#swipe\'">' +
+                (ev.poster_image_url ? '<img src="'+ev.poster_image_url+'" alt="" onerror="this.style.display=\'none\'">' : '<div style="position:absolute;inset:0;background:var(--gradient);opacity:0.08"></div>') +
+                '<div class="event-overlay"><div style="font-size:10px;color:var(--primary);font-weight:600;margin-bottom:2px">'+(ev.genre||'Music')+'</div><h4 style="font-weight:700;font-size:14px;margin-bottom:2px;line-height:1.2">'+ev.title+'</h4><p style="font-size:11px;color:var(--text-secondary)">'+fmtDate(ev.event_date)+'</p></div></div>';
+            }).join('');
+          } else {
+            ec.innerHTML = '<p class="text-secondary text-sm" style="padding:20px">Explore events in the Swipe tab!</p>';
+          }
         }
-      }
+      });
+      API.getTurfGames(null,null).then(function(games){
+        var tc = document.getElementById('home-turf');
+        if (!tc) return;
+        if (games.length > 0) {
+          tc.innerHTML = games.slice(0,3).map(function(g){
+            return '<div class="turf-card" style="cursor:pointer" onclick="window.location.hash=\'#turf\'"><div class="flex justify-between items-center"><div class="flex items-center gap-12"><span style="font-size:28px">'+(SPORT_E[g.sport]||'🏆')+'</span><div><h4 style="font-weight:600;font-size:15px">'+g.sport+'</h4><p class="text-secondary text-xs">'+(g.venue_name||g.location)+' · '+fmtDate(g.game_date)+'</p></div></div><span class="badge badge-cyan">'+(g.players_needed||'?')+' needed</span></div></div>';
+          }).join('');
+        } else {
+          tc.innerHTML = '<p class="text-secondary text-sm">No games scheduled yet</p>';
+        }
+      });
     }
   };
 }
 
-function swipeEventSelectPage() {
+function swipeSelectPage() {
   return {
-    html: '<div class="main-content"><div class="page-container page-enter">' +
-      '<h1 style="font-size:24px;font-weight:800;margin-bottom:8px" data-animate>Find Buddies 🔥</h1>' +
-      '<p class="text-secondary text-sm mb-24" data-animate>Pick an event to start swiping</p>' +
-      '<div id="user-interests" class="flex flex-col gap-12 mb-24"></div>' +
-      '<h3 class="section-title" data-animate>All Events</h3>' +
-      '<div id="all-events-grid" class="flex flex-col gap-12"><div class="skeleton" style="height:80px;border-radius:16px"></div><div class="skeleton" style="height:80px;border-radius:16px"></div></div>' +
-      '<div style="height:80px"></div></div>' + renderNavigation('swipe') + '</div>',
-    async init() {
+    html:
+      '<div class="main-content"><div class="page-container page-enter">' +
+        '<h1 style="font-size:24px;font-weight:800;margin-bottom:8px" data-animate>Find Buddies 🔥</h1>' +
+        '<p class="text-secondary text-sm mb-24" data-animate>Pick an event to start swiping</p>' +
+        '<div id="all-ev" class="flex flex-col gap-12"><div class="skeleton" style="height:80px;border-radius:16px"></div><div class="skeleton" style="height:80px;border-radius:16px"></div></div>' +
+        '<div style="height:80px"></div>' +
+      '</div>' + renderNav('swipe') + '</div>',
+    init: function() {
       staggerIn(document.querySelector('.page-container'));
-      let interests = [];
-      if (state.user) interests = await API.getUserEventInterests(state.user.id);
-      const events = await API.getEvents(state.profile?.city);
-      const grid = document.getElementById('all-events-grid');
-      if (grid) {
-        const evts = events.length > 0 ? events : DEMO_EVENTS;
-        grid.innerHTML = evts.map(ev => '<div class="event-interest-card" data-event-id="' + ev.id + '"><div style="width:56px;height:56px;border-radius:8px;flex-shrink:0;position:relative;overflow:hidden;background:var(--surface-hover);display:flex;align-items:center;justify-content:center">' + (ev.poster_image_url ? '<img src="' + ev.poster_image_url + '" style="width:100%;height:100%;object-fit:cover" onerror="this.remove()">' : '<span style="font-size:24px">🎵</span>') + '</div><div style="flex:1"><h4 style="font-weight:600;font-size:15px">' + ev.title + '</h4><p class="text-secondary text-xs">' + (ev.artist_name || ev.genre || 'Music') + ' · ' + (ev.venue_city || '') + ' · ' + formatDate(ev.event_date) + '</p></div></div>').join('');
-        document.querySelectorAll('[data-event-id]').forEach(card => {
-          card.onclick = () => navigate('#swipe/' + card.dataset.eventId);
+      var city = state.profile ? state.profile.city : null;
+      API.getEvents(city).then(function(events){
+        var g = document.getElementById('all-ev');
+        if (!g) return;
+        var evts = events.length > 0 ? events : DEMO_EVENTS;
+        g.innerHTML = evts.map(function(ev){
+          var img = ev.poster_image_url
+            ? '<img src="'+ev.poster_image_url+'" style="width:100%;height:100%;object-fit:cover" onerror="this.remove()">'
+            : '<span style="font-size:24px">🎵</span>';
+          return '<div class="event-interest-card" data-eid="'+ev.id+'">' +
+            '<div style="width:56px;height:56px;border-radius:8px;flex-shrink:0;position:relative;overflow:hidden;background:var(--surface-hover);display:flex;align-items:center;justify-content:center">' + img + '</div>' +
+            '<div style="flex:1"><h4 style="font-weight:600;font-size:15px">'+ev.title+'</h4><p class="text-secondary text-xs">'+(ev.artist_name||ev.genre||'Music')+' · '+(ev.venue_city||'')+' · '+fmtDate(ev.event_date)+'</p></div></div>';
+        }).join('');
+        document.querySelectorAll('[data-eid]').forEach(function(cd){
+          cd.onclick = function(){ nav('#swipe/'+cd.dataset.eid); };
         });
-      }
+      });
     }
   };
 }
 
 function swipePage(eventId) {
   return {
-    html: '<div class="main-content"><div class="page-container page-enter" style="max-width:420px">' +
-      '<div class="flex items-center gap-12 mb-16" data-animate><button class="btn-icon" onclick="navigate(\'#swipe\')" style="width:36px;height:36px;font-size:16px">←</button><div id="swipe-event-name" style="font-weight:600;font-size:15px">Loading...</div></div>' +
-      '<div class="swipe-container" id="swipe-container"></div>' +
-      '<div class="flex justify-center items-center gap-20 mt-24" id="swipe-actions"><button class="btn-icon large danger" id="btn-pass" title="Pass">✕</button><button class="btn-icon large gold" id="btn-super" title="Super Like">⭐</button><button class="btn-icon large success" id="btn-like" title="Like">♥</button></div>' +
-      '<div style="height:80px"></div></div>' + renderNavigation('swipe') + '</div>',
-    async init() {
-      let profiles = [];
-      let currentIndex = 0;
-      let eventData = null;
+    html:
+      '<div class="main-content"><div class="page-container page-enter" style="max-width:420px">' +
+        '<div class="flex items-center gap-12 mb-16" data-animate>' +
+          '<button class="btn-icon" onclick="window.location.hash=\'#swipe\'" style="width:36px;height:36px;font-size:16px">←</button>' +
+          '<div id="sw-evname" style="font-weight:600;font-size:15px">Loading...</div>' +
+        '</div>' +
+        '<div class="swipe-container" id="sw-container"></div>' +
+        '<div class="flex justify-center items-center gap-20 mt-24" id="sw-actions">' +
+          '<button class="btn-icon large danger" id="sw-pass">✕</button>' +
+          '<button class="btn-icon large gold" id="sw-super">⭐</button>' +
+          '<button class="btn-icon large success" id="sw-like">♥</button>' +
+        '</div>' +
+        '<div style="height:80px"></div>' +
+      '</div>' + renderNav('swipe') + '</div>',
+    init: function() {
+      staggerIn(document.querySelector('.page-container'));
+      var profiles = [];
+      var idx = 0;
+      var evName = document.getElementById('sw-evname');
 
-      if (eventId) {
-        eventData = await API.getEventById(eventId);
-        const nameEl = document.getElementById('swipe-event-name');
-        if (nameEl && eventData) nameEl.textContent = eventData.title;
-        else if (nameEl) nameEl.textContent = 'Swipe Mode';
-        if (state.user && !eventId.startsWith('demo-ev-')) profiles = await API.getProfilesForEvent(eventId, state.user.id);
+      // Find event name
+      var ev = DEMO_EVENTS.filter(function(e){return e.id===eventId;})[0];
+      if (ev) { if(evName) evName.textContent = ev.title; }
+
+      // Try to get real profiles, fall back to demo
+      var getProfiles;
+      if (state.user && eventId.indexOf('de') !== 0) {
+        getProfiles = API.getProfilesForEvent(eventId, state.user.id);
+      } else {
+        getProfiles = Promise.resolve([]);
       }
-      if (profiles.length === 0) profiles = [...DEMO_PROFILES].sort(() => Math.random() - 0.5);
+
+      getProfiles.then(function(real) {
+        profiles = real.length > 0 ? real : DEMO_PROFILES.slice();
+        renderCards();
+      });
 
       function renderCards() {
-        const container = document.getElementById('swipe-container');
+        var container = document.getElementById('sw-container');
         if (!container) return;
-        if (currentIndex >= profiles.length) {
-          container.innerHTML = '<div class="empty-state" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="empty-emoji">🎵</span><h3>All caught up!</h3><p>No more people to swipe on right now. Check back later!</p><button class="btn-gradient mt-24" onclick="navigate(\'#swipe\')">Browse Events</button></div>';
-          const acts = document.getElementById('swipe-actions');
+        if (idx >= profiles.length) {
+          container.innerHTML = '<div class="empty-state"><span class="empty-emoji">🎉</span><h3>All caught up!</h3><p>Check back later for more people</p></div>';
+          var acts = document.getElementById('sw-actions');
           if (acts) acts.style.display = 'none';
           return;
         }
-        const visible = profiles.slice(currentIndex, currentIndex + 3);
-        container.innerHTML = visible.map((p, i) => {
-          const matchPct = getMatchPercentage(state.profile?.favorite_genres, p.favorite_genres);
-          const shared = (state.profile?.favorite_genres || []).filter(g => (p.favorite_genres || []).includes(g));
-          const zIndex = 3 - i;
-          const scale = 1 - i * 0.05;
-          const ty = i * 8;
-          return '<div class="swipe-card" style="z-index:' + zIndex + ';transform:scale(' + scale + ') translateY(' + ty + 'px);' + (i > 0 ? 'pointer-events:none;' : '') + '" data-index="' + (currentIndex + i) + '">' +
-            '<div style="position:absolute;inset:0;background:var(--surface)"></div>' +
-            '<img src="' + (p.avatar_url || getDefaultAvatar(p.full_name)) + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6" onerror="this.src=\'' + getDefaultAvatar(p.full_name) + '\'">' +
-            '<div style="position:absolute;inset:0;background:linear-gradient(transparent 30%, rgba(0,0,0,0.9))"></div>' +
-            '<div class="swipe-stamp stamp-right">CHALEIN! ✌️</div>' +
-            '<div class="swipe-stamp stamp-left">NAHI 👋</div>' +
-            '<div style="position:absolute;bottom:0;left:0;right:0;padding:24px">' +
-              '<div class="flex items-center gap-8 mb-8"><h3 style="font-size:22px;font-weight:800">' + p.full_name + (p.age ? ', ' + p.age : '') + '</h3>' + (p.rating_avg ? '<span class="badge badge-gold">⭐ ' + p.rating_avg + '</span>' : '') + '</div>' +
-              '<p style="color:var(--text-secondary);font-size:13px;margin-bottom:8px">📍 ' + (p.city || 'India') + '</p>' +
-              (p.concert_persona ? '<span class="badge badge-primary" style="margin-bottom:10px">' + p.concert_persona.split('—')[0].trim() + '</span>' : '') +
-              '<div style="margin-bottom:10px"><div class="flex justify-between items-center" style="margin-bottom:4px"><span style="font-size:12px;color:var(--text-secondary)">Music Match</span><span style="font-size:12px;font-weight:700;color:var(--primary)">' + matchPct + '%</span></div><div class="progress-bar"><div class="progress-fill" style="width:' + matchPct + '%"></div></div></div>' +
-              (shared.length > 0 ? '<div class="flex gap-8" style="flex-wrap:wrap;margin-bottom:8px">' + shared.map(g => '<span class="badge badge-primary" style="font-size:10px;padding:2px 8px">' + g + '</span>').join('') + '</div>' : '') +
-              (p.bio ? '<p style="font-size:13px;color:var(--text-secondary);font-style:italic">"' + p.bio + '"</p>' : '') +
-              (p.total_events ? '<p style="font-size:11px;color:var(--text-secondary);margin-top:6px">🎫 ' + p.total_events + ' events attended</p>' : '') +
-            '</div></div>';
-        }).join('');
-        setupCurrentCard();
-      }
+        container.innerHTML = '';
+        var showing = Math.min(3, profiles.length - idx);
+        for (var i = showing - 1; i >= 0; i--) {
+          var pi = idx + i;
+          if (pi >= profiles.length) continue;
+          var pr = profiles[pi];
+          var myGenres = state.profile ? (state.profile.favorite_genres || []) : ['Indie','Rock'];
+          var pct = matchPct(myGenres, pr.favorite_genres || []);
+          var shared = (pr.favorite_genres||[]).filter(function(g){ return myGenres.indexOf(g)>=0; });
+          var isTop = (i === 0);
+          var scale = 1 - (i * 0.05);
+          var yOff = i * 8;
 
-      function setupCurrentCard() {
-        const container = document.getElementById('swipe-container');
-        if (!container) return;
-        const frontCard = container.querySelector('.swipe-card[data-index="' + currentIndex + '"]');
-        if (!frontCard) return;
-        initSwipeCard(frontCard, { onSwipeRight: () => handleSwipe('right'), onSwipeLeft: () => handleSwipe('left'), onSwipeUp: () => handleSwipe('super') });
-      }
+          var card = document.createElement('div');
+          card.className = 'swipe-card';
+          card.style.zIndex = String(10 - i);
+          if (!isTop) {
+            card.style.transform = 'scale('+scale+') translateY('+yOff+'px)';
+            card.style.pointerEvents = 'none';
+          }
+          card.innerHTML =
+            '<img src="'+(pr.avatar_url||defAvatar(pr.full_name))+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.src=\''+defAvatar(pr.full_name)+'\'">' +
+            '<div class="swipe-card-inner">' +
+              '<div class="swipe-stamp stamp-right">CHALEIN ✓</div>' +
+              '<div class="swipe-stamp stamp-left">NAHI ✕</div>' +
+              '<h3 style="font-size:24px;font-weight:800;margin-bottom:4px">'+esc(pr.full_name)+(pr.age?', '+pr.age:'')+'</h3>' +
+              '<p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">📍 '+(pr.city||'India')+'</p>' +
+              (pr.concert_persona ? '<span class="badge badge-primary mb-8" style="display:inline-flex">'+pr.concert_persona.split('—')[0].trim()+'</span>' : '') +
+              '<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Music Match</span><span style="font-size:12px;color:var(--primary);font-weight:700">'+pct+'%</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div></div>' +
+              (shared.length > 0 ? '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">'+shared.map(function(g){return '<span class="badge badge-pink" style="font-size:10px;padding:2px 8px">'+g+'</span>';}).join('')+'</div>' : '') +
+              (pr.bio ? '<p style="font-size:13px;font-style:italic;color:var(--text-secondary);margin-top:4px">"'+esc(pr.bio)+'"</p>' : '') +
+              '<div style="display:flex;gap:12px;margin-top:8px;font-size:11px;color:var(--text-secondary)"><span>🎵 '+(pr.total_events||0)+' events</span><span>⭐ '+(pr.rating_avg||'—')+'</span></div>' +
+            '</div>';
+          container.appendChild(card);
 
-      async function handleSwipe(direction) {
-        const profile = profiles[currentIndex];
-        if (!profile) return;
-        if (state.user && !profile.id.startsWith('demo-') && eventId && !eventId.startsWith('demo-ev-')) {
-          const match = await API.createSwipe(state.user.id, profile.id, eventId, direction);
-          if (match) showMatchOverlay(profile);
-        } else if (direction === 'right' || direction === 'super') {
-          if (Math.random() < 0.3) showMatchOverlay(profile);
+          if (isTop) {
+            (function(topCard, profile) {
+              initSwipeCard(topCard, {
+                onRight: function() { handleSwipe(profile, 'right'); },
+                onLeft: function() { handleSwipe(profile, 'left'); }
+              });
+            })(card, pr);
+          }
         }
-        currentIndex++;
-        renderCards();
       }
 
-      function showMatchOverlay(matchedProfile) {
+      function handleSwipe(profile, dir) {
+        idx++;
+        if (state.user && profile.id && profile.id.indexOf('d') !== 0) {
+          API.createSwipe(state.user.id, profile.id, eventId, dir).then(function(match) {
+            if (match) { showMatchOverlay(profile); }
+          });
+        } else if (dir === 'right' || dir === 'super') {
+          // Demo mode: random match
+          if (Math.random() < 0.3) { showMatchOverlay(profile); }
+        }
+        setTimeout(renderCards, 100);
+      }
+
+      function showMatchOverlay(profile) {
         if (confetti) confetti.burst();
-        const overlay = document.createElement('div');
-        overlay.className = 'match-overlay';
-        overlay.innerHTML = '<div class="match-title">It\'s a Match! 🎉</div><p class="text-secondary mt-16" style="font-size:16px">You and ' + matchedProfile.full_name + ' are going together!</p><div class="flex gap-16 mt-32"><button class="btn-gradient" onclick="this.closest(\'.match-overlay\').remove()">Keep Swiping</button><button class="btn-outline" onclick="this.closest(\'.match-overlay\').remove();navigate(\'#chat\')">Say Hi 👋</button></div>';
-        document.body.appendChild(overlay);
-        setTimeout(() => { if (overlay.parentElement) overlay.remove(); }, 8000);
+        var m = document.getElementById('modal-container');
+        m.style.display = 'block';
+        m.innerHTML =
+          '<div class="match-overlay" id="match-ov">' +
+            '<div class="match-title gradient-text" style="font-size:48px;font-weight:800;margin-bottom:16px">It\'s a Match! 🎉</div>' +
+            '<div class="flex items-center gap-16 mb-24">' +
+              '<div class="avatar-ring"><img class="avatar" width="80" height="80" src="'+(state.profile?state.profile.avatar_url:defAvatar('You'))+'" onerror="this.src=\''+defAvatar('You')+'\'"></div>' +
+              '<div style="font-size:32px">💜</div>' +
+              '<div class="avatar-ring"><img class="avatar" width="80" height="80" src="'+(profile.avatar_url||defAvatar(profile.full_name))+'" onerror="this.src=\''+defAvatar(profile.full_name)+'\'"></div>' +
+            '</div>' +
+            '<p class="text-secondary mb-24">You and '+esc(profile.full_name)+' are going together!</p>' +
+            '<div class="flex gap-12"><button class="btn-gradient" onclick="document.getElementById(\'modal-container\').style.display=\'none\';document.getElementById(\'modal-container\').innerHTML=\'\';window.location.hash=\'#chat\'">Send a Message 💬</button><button class="btn-outline" onclick="document.getElementById(\'modal-container\').style.display=\'none\';document.getElementById(\'modal-container\').innerHTML=\'\'">Keep Swiping</button></div>' +
+          '</div>';
       }
 
-      document.getElementById('btn-pass')?.addEventListener('click', () => {
-        const container = document.getElementById('swipe-container');
-        const fc = container?.querySelector('.swipe-card[data-index="' + currentIndex + '"]');
-        if (fc) { fc.style.transition = 'transform 0.4s ease, opacity 0.4s'; fc.style.transform = 'translateX(-150%) rotate(-30deg)'; fc.style.opacity = '0'; setTimeout(() => handleSwipe('left'), 300); }
-      });
-      document.getElementById('btn-like')?.addEventListener('click', () => {
-        const container = document.getElementById('swipe-container');
-        const fc = container?.querySelector('.swipe-card[data-index="' + currentIndex + '"]');
-        if (fc) { fc.style.transition = 'transform 0.4s ease, opacity 0.4s'; fc.style.transform = 'translateX(150%) rotate(30deg)'; fc.style.opacity = '0'; setTimeout(() => handleSwipe('right'), 300); }
-      });
-      document.getElementById('btn-super')?.addEventListener('click', () => {
-        const container = document.getElementById('swipe-container');
-        const fc = container?.querySelector('.swipe-card[data-index="' + currentIndex + '"]');
-        if (fc) { fc.style.transition = 'transform 0.4s ease, opacity 0.4s'; fc.style.transform = 'translateY(-150%) scale(0.5)'; fc.style.opacity = '0'; setTimeout(() => handleSwipe('super'), 300); }
-      });
-      renderCards();
+      // Button handlers
+      var passBtn = document.getElementById('sw-pass');
+      var superBtn = document.getElementById('sw-super');
+      var likeBtn = document.getElementById('sw-like');
+      if (passBtn) passBtn.onclick = function() {
+        if (idx < profiles.length) {
+          var topCard = document.querySelector('.swipe-card[style*="z-index: 10"], .swipe-card:last-child');
+          if (topCard) {
+            topCard.style.transition = 'transform 0.4s, opacity 0.4s';
+            topCard.style.transform = 'translate(-'+window.innerWidth+'px,0) rotate(-30deg)';
+            topCard.style.opacity = '0';
+          }
+          handleSwipe(profiles[idx], 'left');
+        }
+      };
+      if (superBtn) superBtn.onclick = function() {
+        if (idx < profiles.length) {
+          var topCard = document.querySelector('.swipe-card[style*="z-index: 10"], .swipe-card:last-child');
+          if (topCard) {
+            topCard.style.transition = 'transform 0.4s, opacity 0.4s';
+            topCard.style.transform = 'translateY(-'+window.innerHeight+'px) scale(0.5)';
+            topCard.style.opacity = '0';
+          }
+          handleSwipe(profiles[idx], 'super');
+        }
+      };
+      if (likeBtn) likeBtn.onclick = function() {
+        if (idx < profiles.length) {
+          var topCard = document.querySelector('.swipe-card[style*="z-index: 10"], .swipe-card:last-child');
+          if (topCard) {
+            topCard.style.transition = 'transform 0.4s, opacity 0.4s';
+            topCard.style.transform = 'translate('+window.innerWidth+'px,0) rotate(30deg)';
+            topCard.style.opacity = '0';
+          }
+          handleSwipe(profiles[idx], 'right');
+        }
+      };
     }
   };
 }
 
 function chatListPage() {
   return {
-    html: '<div class="main-content"><div class="page-container page-enter">' +
-      '<h1 style="font-size:24px;font-weight:800;margin-bottom:24px" data-animate>Messages 💬</h1>' +
-      '<div id="chat-list" class="flex flex-col gap-8"><div class="skeleton" style="height:72px;border-radius:16px"></div><div class="skeleton" style="height:72px;border-radius:16px"></div></div>' +
-      '<div style="height:80px"></div></div>' + renderNavigation('chat') + '</div>',
-    async init() {
+    html:
+      '<div class="main-content"><div class="page-container page-enter">' +
+        '<h1 style="font-size:24px;font-weight:800;margin-bottom:24px" data-animate>Messages 💬</h1>' +
+        '<div id="match-list" class="flex flex-col gap-8"><div class="skeleton" style="height:72px;border-radius:16px"></div></div>' +
+        '<div style="height:80px"></div>' +
+      '</div>' + renderNav('chat') + '</div>',
+    init: function() {
       staggerIn(document.querySelector('.page-container'));
-      const userId = state.user?.id;
-      let matches = [];
-      if (userId) matches = await API.getMatches(userId);
-      const list = document.getElementById('chat-list');
-      if (!list) return;
-      if (matches.length === 0) {
-        list.innerHTML = '<div class="empty-state"><span class="empty-emoji">💬</span><h3>No matches yet</h3><p>Start swiping to find your concert buddies! When you match, you can chat here.</p><button class="btn-gradient mt-24" onclick="navigate(\'#swipe\')">Start Swiping 🔥</button></div>';
-        return;
-      }
-      list.innerHTML = matches.map(match => {
-        const other = match.user1_id === userId ? match.user2 : match.user1;
-        const event = match.event;
-        return '<div class="match-item" onclick="navigate(\'#chat/' + match.id + '\')"><div class="avatar-ring"><img class="avatar" width="48" height="48" src="' + (other?.avatar_url || getDefaultAvatar(other?.full_name)) + '" alt="" onerror="this.src=\'' + getDefaultAvatar(other?.full_name) + '\'"></div><div style="flex:1;min-width:0"><div class="flex justify-between items-center"><h4 style="font-weight:600;font-size:15px">' + (other?.full_name || 'Unknown') + '</h4><span class="text-secondary text-xs">' + timeAgo(match.matched_at) + '</span></div>' + (event ? '<span class="badge badge-primary" style="font-size:10px;padding:2px 8px;margin-top:2px">' + event.title + '</span>' : '') + '<p class="text-secondary text-xs" style="margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Say hi! 👋</p></div></div>';
-      }).join('');
+      var uid = state.user ? state.user.id : null;
+      API.getMatches(uid).then(function(matches) {
+        var list = document.getElementById('match-list');
+        if (!list) return;
+        if (matches.length === 0) {
+          list.innerHTML = '<div class="empty-state"><span class="empty-emoji">💬</span><h3>No matches yet</h3><p>Start swiping to find your concert buddies!</p><button class="btn-gradient mt-16" onclick="window.location.hash=\'#swipe\'">Start Swiping 🔥</button></div>';
+          return;
+        }
+        list.innerHTML = matches.map(function(m) {
+          var other = (m.user1 && m.user1.id === uid) ? m.user2 : m.user1;
+          if (!other) other = {full_name:'Someone',avatar_url:''};
+          var evName = m.event ? m.event.title : 'an event';
+          return '<div class="match-item" onclick="window.location.hash=\'#chat/'+m.id+'\'">' +
+            '<div class="avatar-ring" style="padding:2px"><img class="avatar" width="48" height="48" src="'+(other.avatar_url||defAvatar(other.full_name))+'" onerror="this.src=\''+defAvatar(other.full_name)+'\'"></div>' +
+            '<div style="flex:1"><h4 style="font-weight:600;font-size:15px">'+esc(other.full_name)+'</h4><p class="text-secondary text-xs">'+esc(evName)+' · Say hi! 👋</p></div>' +
+            '<span class="text-secondary text-xs">'+timeAgo(m.matched_at)+'</span>' +
+          '</div>';
+        }).join('');
+      });
     }
   };
 }
 
 function chatDetailPage(matchId) {
   return {
-    html: '<div class="main-content" style="height:100vh;display:flex;flex-direction:column">' +
-      '<div class="chat-header glass-strong" id="chat-detail-header"><button class="btn-icon" onclick="navigate(\'#chat\')" style="width:36px;height:36px;font-size:16px">←</button><div class="avatar-ring" style="padding:2px"><img class="avatar" width="36" height="36" id="chat-avatar" src="" alt=""></div><div><h4 style="font-weight:600;font-size:15px" id="chat-name">Loading...</h4><p class="text-secondary text-xs" id="chat-event-tag"></p></div></div>' +
-      '<div class="chat-messages" id="chat-messages"><div class="skeleton" style="height:40px;width:60%;border-radius:16px"></div><div class="skeleton" style="height:40px;width:40%;border-radius:16px;align-self:flex-end"></div></div>' +
-      '<div class="chat-input-bar glass-strong"><input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off"><button id="chat-send">➤</button></div></div>',
-    async init() {
-      const userId = state.user?.id;
-      if (!userId || !matchId) { navigate('#chat'); return; }
-      const matches = await API.getMatches(userId);
-      const match = matches.find(m => m.id === matchId);
-      if (!match) { navigate('#chat'); return; }
-      const other = match.user1_id === userId ? match.user2 : match.user1;
-      const event = match.event;
-      const avatarEl = document.getElementById('chat-avatar');
-      if (avatarEl) { avatarEl.src = other?.avatar_url || getDefaultAvatar(other?.full_name); avatarEl.onerror = function() { this.src = getDefaultAvatar(other?.full_name); }; }
-      document.getElementById('chat-name').textContent = other?.full_name || 'Unknown';
-      if (event) document.getElementById('chat-event-tag').textContent = '🎵 ' + event.title + ' · ' + formatDate(event.event_date);
+    html:
+      '<div class="main-content" style="height:100vh;display:flex;flex-direction:column">' +
+        '<div class="chat-header glass-strong" id="ch-header">' +
+          '<button class="btn-icon" onclick="window.location.hash=\'#chat\'" style="width:36px;height:36px;font-size:16px">←</button>' +
+          '<div id="ch-info">Loading...</div>' +
+        '</div>' +
+        '<div class="chat-messages" id="ch-msgs"></div>' +
+        '<div class="chat-input-bar glass-strong">' +
+          '<input type="text" id="ch-input" placeholder="Type a message...">' +
+          '<button id="ch-send">→</button>' +
+        '</div>' +
+      '</div>',
+    init: function() {
+      var uid = state.user ? state.user.id : null;
+      var messages = [];
 
-      const messagesContainer = document.getElementById('chat-messages');
-      const messages = await API.getMessages(matchId);
+      // Load match info
+      API.getMatches(uid).then(function(matches) {
+        var match = matches.filter(function(m){return m.id===matchId;})[0];
+        var header = document.getElementById('ch-info');
+        if (match && header) {
+          var other = (match.user1 && match.user1.id === uid) ? match.user2 : match.user1;
+          if (!other) other = {full_name:'Someone',avatar_url:''};
+          header.innerHTML = '<div class="avatar-ring" style="padding:2px"><img class="avatar" width="36" height="36" src="'+(other.avatar_url||defAvatar(other.full_name))+'" onerror="this.src=\''+defAvatar(other.full_name)+'\'"></div><div><div style="font-weight:600;font-size:14px">'+esc(other.full_name)+'</div>'+(match.event?'<div class="text-secondary text-xs">'+match.event.title+'</div>':'')+'</div>';
+        }
+      });
 
-      function renderMessages(msgs) {
-        if (!messagesContainer) return;
-        if (msgs.length === 0) { messagesContainer.innerHTML = '<div class="text-center" style="padding:40px 20px;margin:auto"><div style="font-size:48px;margin-bottom:12px">👋</div><p class="text-secondary">Say hi to ' + (other?.full_name || 'them') + '!</p></div>'; return; }
-        messagesContainer.innerHTML = msgs.map(msg => '<div style="display:flex;flex-direction:column;' + (msg.sender_id === userId ? 'align-items:flex-end' : 'align-items:flex-start') + '"><div class="chat-bubble ' + (msg.sender_id === userId ? 'sent' : 'received') + '">' + escapeHtml(msg.content) + '</div><span class="chat-time">' + timeAgo(msg.created_at) + '</span></div>').join('');
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      // Load messages
+      API.getMessages(matchId).then(function(msgs) {
+        messages = msgs;
+        renderMsgs();
+      });
+
+      // Subscribe to realtime
+      API.subMessages(matchId, function(msg) {
+        if (msg.sender_id !== uid) {
+          messages.push(msg);
+          renderMsgs();
+        }
+      });
+
+      function renderMsgs() {
+        var c = document.getElementById('ch-msgs');
+        if (!c) return;
+        if (messages.length === 0) {
+          c.innerHTML = '<div style="text-align:center;padding:40px 20px;margin:auto"><div style="font-size:48px;margin-bottom:12px">👋</div><p class="text-secondary">Say hi!</p></div>';
+          return;
+        }
+        c.innerHTML = messages.map(function(msg) {
+          var isMine = msg.sender_id === uid;
+          return '<div style="display:flex;flex-direction:column;'+(isMine?'align-items:flex-end':'align-items:flex-start')+'"><div class="chat-bubble '+(isMine?'sent':'received')+'">'+esc(msg.content)+'</div><span class="chat-time">'+timeAgo(msg.created_at)+'</span></div>';
+        }).join('');
+        c.scrollTop = c.scrollHeight;
       }
-      renderMessages(messages);
-      API.subscribeToMessages(matchId, (newMsg) => { if (newMsg.sender_id !== userId) { messages.push(newMsg); renderMessages(messages); } });
-      const input = document.getElementById('chat-input');
-      const sendBtn = document.getElementById('chat-send');
-      async function sendMsg() {
-        const content = input.value.trim();
-        if (!content) return;
-        input.value = '';
-        const msg = await API.sendMessage(matchId, userId, content);
-        if (msg) { messages.push(msg); renderMessages(messages); }
+
+      function sendMsg() {
+        var inp = document.getElementById('ch-input');
+        var content = inp.value.trim();
+        if (!content || !uid) return;
+        inp.value = '';
+        API.sendMessage(matchId, uid, content).then(function(msg) {
+          if (msg) { messages.push(msg); renderMsgs(); }
+        });
       }
-      sendBtn?.addEventListener('click', sendMsg);
-      input?.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMsg(); });
-      input?.focus();
+
+      var sb2 = document.getElementById('ch-send');
+      var inp2 = document.getElementById('ch-input');
+      if (sb2) sb2.onclick = sendMsg;
+      if (inp2) { inp2.onkeydown = function(e){ if(e.key==='Enter') sendMsg(); }; inp2.focus(); }
     }
   };
 }
 
 function turfPage() {
   return {
-    html: '<div class="main-content"><div class="page-container page-enter">' +
-      '<h1 style="font-size:24px;font-weight:800;margin-bottom:8px" data-animate>Turf & Sports ⚽</h1>' +
-      '<p class="text-secondary text-sm mb-16" data-animate>Find pickup games near you</p>' +
-      '<div class="filter-pills mb-24" data-animate><button class="filter-pill active" data-sport="All">All</button>' + SPORTS.map(s => '<button class="filter-pill" data-sport="' + s + '">' + (SPORT_EMOJIS[s] || '🏆') + ' ' + s + '</button>').join('') + '</div>' +
-      '<div id="turf-games-list" class="flex flex-col gap-12"><div class="skeleton" style="height:120px;border-radius:16px"></div><div class="skeleton" style="height:120px;border-radius:16px"></div></div>' +
-      '<div style="height:100px"></div></div>' +
-      '<button class="fab" id="create-game-fab" title="Create Game">+</button>' +
-      renderNavigation('turf') + '</div>',
-    async init() {
+    html:
+      '<div class="main-content"><div class="page-container page-enter">' +
+        '<h1 style="font-size:24px;font-weight:800;margin-bottom:8px" data-animate>Turf & Sports ⚽</h1>' +
+        '<p class="text-secondary text-sm mb-16" data-animate>Find pickup games near you</p>' +
+        '<div class="filter-pills mb-24" data-animate>' +
+          '<button class="filter-pill active" data-sport="All">All</button>' +
+          SPORTS.map(function(s){ return '<button class="filter-pill" data-sport="'+s+'">'+(SPORT_E[s]||'🏆')+' '+s+'</button>'; }).join('') +
+        '</div>' +
+        '<div id="turf-list" class="flex flex-col gap-12"><div class="skeleton" style="height:120px;border-radius:16px"></div><div class="skeleton" style="height:120px;border-radius:16px"></div></div>' +
+        '<div style="height:100px"></div>' +
+      '</div>' +
+      '<button class="fab" id="create-fab" title="Create Game">+</button>' +
+      renderNav('turf') + '</div>',
+    init: function() {
       staggerIn(document.querySelector('.page-container'));
-      let activeSport = 'All';
-      async function loadGames() {
-        const games = await API.getTurfGames(activeSport === 'All' ? null : activeSport, null);
-        const list = document.getElementById('turf-games-list');
-        if (!list) return;
-        if (games.length === 0) { list.innerHTML = '<div class="empty-state"><span class="empty-emoji">⚽</span><h3>No games yet</h3><p>Be the first to create a pickup game!</p></div>'; return; }
-        list.innerHTML = games.map(game => '<div class="turf-card"><div class="flex justify-between items-center mb-16"><div class="flex items-center gap-12"><span style="font-size:32px">' + (SPORT_EMOJIS[game.sport] || '🏆') + '</span><div><h4 style="font-weight:700;font-size:16px">' + game.sport + '</h4><p class="text-secondary text-xs">by ' + (game.creator?.full_name || 'Unknown') + '</p></div></div><span class="badge ' + (game.skill_level?.includes('Beginner') ? 'badge-success' : game.skill_level?.includes('Advanced') ? 'badge-danger' : 'badge-cyan') + '">' + (game.skill_level || 'Any level') + '</span></div><div class="flex flex-col gap-8" style="margin-bottom:16px"><div class="flex items-center gap-8"><span class="text-secondary">📍</span><span class="text-sm">' + (game.venue_name || 'TBD') + (game.location ? ', ' + game.location : '') + '</span></div><div class="flex items-center gap-8"><span class="text-secondary">📅</span><span class="text-sm">' + formatDate(game.game_date) + (game.game_time ? ' · ' + game.game_time : '') + '</span></div><div class="flex items-center gap-8"><span class="text-secondary">👥</span><span class="text-sm">' + (game.players_needed || '?') + ' players needed</span></div></div><button class="btn-gradient w-full" style="padding:10px;font-size:14px" onclick="handleJoinGame(\'' + game.id + '\')">Join Game 🙌</button></div>').join('');
+      var active = 'All';
+
+      function load() {
+        API.getTurfGames(active==='All'?null:active, null).then(function(games){
+          var list = document.getElementById('turf-list');
+          if (!list) return;
+          if (games.length === 0) {
+            list.innerHTML = '<div class="empty-state"><span class="empty-emoji">⚽</span><h3>No games yet</h3><p>Be the first to create a pickup game!</p></div>';
+            return;
+          }
+          list.innerHTML = games.map(function(g){
+            var skillClass = g.skill_level&&g.skill_level.indexOf('Beginner')>=0?'badge-success':g.skill_level&&g.skill_level.indexOf('Advanced')>=0?'badge-danger':'badge-cyan';
+            return '<div class="turf-card">' +
+              '<div class="flex justify-between items-center mb-16"><div class="flex items-center gap-12"><span style="font-size:32px">'+(SPORT_E[g.sport]||'🏆')+'</span><div><h4 style="font-weight:700;font-size:16px">'+g.sport+'</h4><p class="text-secondary text-xs">by '+(g.creator?g.creator.full_name:'Unknown')+'</p></div></div><span class="badge '+skillClass+'">'+(g.skill_level||'Any level')+'</span></div>' +
+              '<div class="flex flex-col gap-8" style="margin-bottom:16px"><div class="flex items-center gap-8"><span class="text-secondary">📍</span><span class="text-sm">'+(g.venue_name||'TBD')+(g.location?', '+g.location:'')+'</span></div><div class="flex items-center gap-8"><span class="text-secondary">📅</span><span class="text-sm">'+fmtDate(g.game_date)+(g.game_time?' · '+g.game_time:'')+'</span></div><div class="flex items-center gap-8"><span class="text-secondary">👥</span><span class="text-sm">'+(g.players_needed||'?')+' players needed</span></div></div>' +
+              '<button class="btn-gradient w-full" style="padding:10px;font-size:14px" data-join="'+g.id+'">Join Game 🙌</button></div>';
+          }).join('');
+          document.querySelectorAll('[data-join]').forEach(function(btn){
+            btn.onclick = function(e) {
+              e.stopPropagation();
+              if (!state.user) { showToast('Sign in to join!','info'); showAuthModal(); return; }
+              API.joinTurfGame(btn.dataset.join, state.user.id);
+            };
+          });
+        });
       }
-      document.querySelectorAll('.filter-pill').forEach(pill => {
-        pill.onclick = () => { document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active')); pill.classList.add('active'); activeSport = pill.dataset.sport; loadGames(); };
+
+      document.querySelectorAll('.filter-pill').forEach(function(p){
+        p.onclick = function(){ document.querySelectorAll('.filter-pill').forEach(function(x){x.classList.remove('active');}); p.classList.add('active'); active=p.dataset.sport; load(); };
       });
-      document.getElementById('create-game-fab')?.addEventListener('click', showCreateGameModal);
-      await loadGames();
+
+      var fab = document.getElementById('create-fab');
+      if (fab) fab.onclick = function() {
+        if (!state.user) { showToast('Sign in to create!','info'); showAuthModal(); return; }
+        showCreateGameModal(load);
+      };
+      load();
     }
   };
 }
 
-window.handleJoinGame = async function(gameId) {
-  if (!state.user) { showToast('Sign in to join games!', 'info'); showAuthModal(); return; }
-  await API.joinTurfGame(gameId, state.user.id);
-};
+function showCreateGameModal(onCreated) {
+  var m = document.getElementById('modal-container');
+  m.style.display = 'block';
+  m.innerHTML =
+    '<div class="modal-overlay" id="cg-ov"><div class="modal-card" style="max-width:480px;max-height:90vh;overflow-y:auto">' +
+    '<button class="modal-close" id="cg-close">&times;</button>' +
+    '<h2 style="font-size:22px;font-weight:800;margin-bottom:24px">Create Game 🏆</h2>' +
+    '<div class="edit-modal-body">' +
+      '<div><label>Sport</label><select class="input" id="cg-sport">'+SPORTS.map(function(s){return '<option value="'+s+'">'+(SPORT_E[s]||'🏆')+' '+s+'</option>';}).join('')+'</select></div>' +
+      '<div><label>Venue Name</label><input class="input" id="cg-venue" placeholder="e.g., PowerPlay Arena"></div>' +
+      '<div><label>City</label><select class="input" id="cg-city">'+CITIES.map(function(c){return '<option value="'+c+'"'+(c===(state.profile?state.profile.city:'')?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>' +
+      '<div class="grid-2"><div><label>Date</label><input class="input" type="date" id="cg-date"></div><div><label>Time</label><input class="input" type="time" id="cg-time"></div></div>' +
+      '<div><label>Players Needed</label><input class="input" type="number" id="cg-players" min="1" max="30" value="4"></div>' +
+      '<div><label>Skill Level</label><select class="input" id="cg-skill">'+SKILLS.map(function(s){return '<option value="'+s+'">'+s+'</option>';}).join('')+'</select></div>' +
+      '<button class="btn-gradient w-full mt-8" id="cg-submit">Create Game 🚀</button>' +
+    '</div></div></div>';
 
-function showCreateGameModal() {
-  if (!state.user) { showToast('Sign in to create games!', 'info'); showAuthModal(); return; }
-  const modal = document.getElementById('modal-container');
-  modal.style.display = 'block';
-  modal.innerHTML = '<div class="modal-overlay" id="create-game-overlay"><div class="modal-card" style="max-width:480px"><button class="modal-close" id="create-game-close">&times;</button><h2 style="font-size:22px;font-weight:800;margin-bottom:24px">Create Game 🏆</h2><div class="edit-modal-body"><div><label>Sport</label><select class="input" id="cg-sport">' + SPORTS.map(s => '<option value="' + s + '">' + (SPORT_EMOJIS[s] || '🏆') + ' ' + s + '</option>').join('') + '</select></div><div><label>Venue Name</label><input class="input" id="cg-venue" placeholder="e.g., PowerPlay Arena"></div><div><label>City</label><select class="input" id="cg-city">' + INDIAN_CITIES.map(c => '<option value="' + c + '"' + (c === state.profile?.city ? ' selected' : '') + '>' + c + '</option>').join('') + '</select></div><div class="grid-2"><div><label>Date</label><input class="input" type="date" id="cg-date"></div><div><label>Time</label><input class="input" type="time" id="cg-time"></div></div><div><label>Players Needed</label><input class="input" type="number" id="cg-players" min="1" max="30" value="4"></div><div><label>Skill Level</label><select class="input" id="cg-skill">' + SKILL_LEVELS.map(s => '<option value="' + s + '">' + s + '</option>').join('') + '</select></div><button class="btn-gradient w-full mt-8" id="cg-submit">Create Game 🚀</button></div></div></div>';
-  document.getElementById('create-game-close').onclick = () => { modal.style.display = 'none'; modal.innerHTML = ''; };
-  document.getElementById('create-game-overlay').onclick = (e) => { if (e.target.id === 'create-game-overlay') { modal.style.display = 'none'; modal.innerHTML = ''; } };
-  document.getElementById('cg-submit').onclick = async () => {
-    const d = { creator_id: state.user.id, sport: document.getElementById('cg-sport').value, venue_name: document.getElementById('cg-venue').value, location: document.getElementById('cg-city').value, game_date: document.getElementById('cg-date').value, game_time: document.getElementById('cg-time').value, players_needed: parseInt(document.getElementById('cg-players').value) || 4, skill_level: document.getElementById('cg-skill').value, status: 'open' };
-    if (!d.venue_name || !d.game_date) { showToast('Fill in venue and date', 'error'); return; }
-    const result = await API.createTurfGame(d);
-    if (result) { modal.style.display = 'none'; modal.innerHTML = ''; navigate('#turf'); }
+  document.getElementById('cg-close').onclick = function(){m.style.display='none';m.innerHTML='';};
+  document.getElementById('cg-ov').onclick = function(e){if(e.target.id==='cg-ov'){m.style.display='none';m.innerHTML='';}};
+  document.getElementById('cg-submit').onclick = function() {
+    var d = {
+      creator_id: state.user.id,
+      sport: document.getElementById('cg-sport').value,
+      venue_name: document.getElementById('cg-venue').value,
+      location: document.getElementById('cg-city').value,
+      game_date: document.getElementById('cg-date').value,
+      game_time: document.getElementById('cg-time').value,
+      players_needed: parseInt(document.getElementById('cg-players').value)||4,
+      skill_level: document.getElementById('cg-skill').value,
+      status: 'open'
+    };
+    if (!d.venue_name||!d.game_date) { showToast('Fill in venue and date','error'); return; }
+    API.createTurfGame(d).then(function(r){
+      if(r){m.style.display='none';m.innerHTML='';if(onCreated)onCreated();}
+    });
   };
 }
 
 function profilePage() {
-  const profile = state.profile;
+  var p = state.profile || {};
   return {
-    html: '<div class="main-content"><div class="page-container page-enter">' +
-      '<div class="profile-header" data-animate><div class="avatar-ring" style="padding:4px;margin-bottom:16px"><img class="avatar" width="100" height="100" src="' + (profile?.avatar_url || getDefaultAvatar(profile?.full_name)) + '" alt="" onerror="this.src=\'' + getDefaultAvatar(profile?.full_name) + '\'"></div><h1 style="font-size:24px;font-weight:800">' + (profile?.full_name || 'User') + '</h1><p class="text-secondary">📍 ' + (profile?.city || 'India') + '</p>' + (profile?.concert_persona ? '<span class="badge badge-primary mt-8">' + profile.concert_persona.split('—')[0].trim() + '</span>' : '') + '<div style="margin-top:16px"><button class="btn-outline" id="edit-profile-btn" style="padding:8px 20px;font-size:13px">✏️ Edit Profile</button></div></div>' +
-      (profile?.favorite_genres?.length ? '<div class="mb-24" data-animate><h3 class="section-title">Your Music DNA 🎵</h3><div style="display:flex;flex-wrap:wrap;gap:8px">' + profile.favorite_genres.map(g => '<span class="genre-pill active" style="cursor:default">' + g + '</span>').join('') + '</div></div>' : '') +
-      '<div class="stats-grid mb-24" data-animate><div class="stat-card"><div class="stat-number" data-count="' + (profile?.total_events || 0) + '">0</div><div class="stat-label">Events</div></div><div class="stat-card"><div class="stat-number" data-count="' + (profile?.total_matches || 0) + '">0</div><div class="stat-label">Matches</div></div><div class="stat-card"><div class="stat-number">' + (profile?.rating_avg ? parseFloat(profile.rating_avg).toFixed(1) : '—') + '</div><div class="stat-label">Rating</div></div><div class="stat-card"><div class="stat-number">🔥</div><div class="stat-label">Streak</div></div></div>' +
-      (profile?.bio ? '<div class="mb-24" data-animate><h3 class="section-title">Bio ✍️</h3><div class="card" style="padding:16px"><p style="font-style:italic;color:var(--text-secondary)">"' + profile.bio + '"</p></div></div>' : '') +
-      '<div class="mb-24" data-animate><h3 class="section-title">Badges 🏆</h3><div class="badge-grid"><div class="badge-item"><span class="badge-emoji">🎵</span><span class="badge-name">Music Lover</span></div><div class="badge-item"><span class="badge-emoji">🤝</span><span class="badge-name">Social Butterfly</span></div><div class="badge-item"><span class="badge-emoji">⭐</span><span class="badge-name">Top Rated</span></div><div class="badge-item locked"><span class="badge-emoji">🏆</span><span class="badge-name">Legend</span></div><div class="badge-item locked"><span class="badge-emoji">🎪</span><span class="badge-name">Festival Pro</span></div><div class="badge-item locked"><span class="badge-emoji">💎</span><span class="badge-name">Diamond</span></div></div></div>' +
-      '<div class="text-center mt-32 mb-24" data-animate><button class="btn-outline" id="signout-btn" style="color:var(--danger);border-color:rgba(239,68,68,0.3)">Sign Out</button></div>' +
-      '<div style="height:80px"></div></div>' + renderNavigation('profile') + '</div>',
-    init() {
+    html:
+      '<div class="main-content"><div class="page-container page-enter">' +
+        '<div class="profile-header" data-animate>' +
+          '<div class="avatar-ring" style="padding:4px;margin-bottom:16px"><img class="avatar" width="100" height="100" src="'+(p.avatar_url||defAvatar(p.full_name))+'" onerror="this.src=\''+defAvatar(p.full_name)+'\'"></div>' +
+          '<h1 style="font-size:24px;font-weight:800">'+(p.full_name||'User')+'</h1>' +
+          '<p class="text-secondary">📍 '+(p.city||'India')+'</p>' +
+          (p.concert_persona?'<span class="badge badge-primary mt-8">'+p.concert_persona.split('—')[0].trim()+'</span>':'') +
+          '<div style="margin-top:16px"><button class="btn-outline" id="edit-btn" style="padding:8px 20px;font-size:13px">✏️ Edit Profile</button></div>' +
+        '</div>' +
+        (p.favorite_genres&&p.favorite_genres.length?'<div class="mb-24" data-animate><h3 class="section-title">Your Music DNA 🎵</h3><div style="display:flex;flex-wrap:wrap;gap:8px">'+p.favorite_genres.map(function(g){return '<span class="genre-pill active" style="cursor:default">'+g+'</span>';}).join('')+'</div></div>':'') +
+        '<div class="stats-grid mb-24" data-animate>' +
+          '<div class="stat-card"><div class="stat-number" data-count="'+(p.total_events||0)+'">0</div><div class="stat-label">Events</div></div>' +
+          '<div class="stat-card"><div class="stat-number" data-count="'+(p.total_matches||0)+'">0</div><div class="stat-label">Matches</div></div>' +
+          '<div class="stat-card"><div class="stat-number">'+(p.rating_avg?parseFloat(p.rating_avg).toFixed(1):'—')+'</div><div class="stat-label">Rating</div></div>' +
+          '<div class="stat-card"><div class="stat-number">🔥</div><div class="stat-label">Streak</div></div>' +
+        '</div>' +
+        (p.bio?'<div class="mb-24" data-animate><h3 class="section-title">Bio ✍️</h3><div class="card" style="padding:16px"><p style="font-style:italic;color:var(--text-secondary)">"'+esc(p.bio)+'"</p></div></div>':'') +
+        '<div class="mb-24" data-animate><h3 class="section-title">Badges 🏆</h3><div class="badge-grid">' +
+          '<div class="badge-item"><span class="badge-emoji">🎵</span><span class="badge-name">Music Lover</span></div>' +
+          '<div class="badge-item"><span class="badge-emoji">🤝</span><span class="badge-name">Social Butterfly</span></div>' +
+          '<div class="badge-item"><span class="badge-emoji">⭐</span><span class="badge-name">Top Rated</span></div>' +
+          '<div class="badge-item locked"><span class="badge-emoji">🏆</span><span class="badge-name">Legend</span></div>' +
+          '<div class="badge-item locked"><span class="badge-emoji">🎪</span><span class="badge-name">Festival Pro</span></div>' +
+          '<div class="badge-item locked"><span class="badge-emoji">💎</span><span class="badge-name">Diamond</span></div>' +
+        '</div></div>' +
+        '<div class="text-center mt-32 mb-24" data-animate><button class="btn-outline" id="signout-btn" style="color:var(--danger);border-color:rgba(239,68,68,0.3)">Sign Out</button></div>' +
+        '<div style="height:80px"></div>' +
+      '</div>' + renderNav('profile') + '</div>',
+    init: function() {
       staggerIn(document.querySelector('.page-container'));
-      document.querySelectorAll('[data-count]').forEach(el => animateCounter(el, parseInt(el.dataset.count)));
-      document.getElementById('edit-profile-btn')?.addEventListener('click', showEditProfileModal);
-      document.getElementById('signout-btn')?.addEventListener('click', () => {
-        if (confirm('Are you sure you want to sign out?')) API.signOut();
-      });
+      document.querySelectorAll('[data-count]').forEach(function(el){animateCounter(el,parseInt(el.dataset.count));});
+      var eb = document.getElementById('edit-btn');
+      if (eb) eb.onclick = showEditModal;
+      var so = document.getElementById('signout-btn');
+      if (so) so.onclick = function() { if(confirm('Are you sure you want to sign out?')) API.signOut(); };
     }
   };
 }
 
-function showEditProfileModal() {
-  const profile = state.profile;
-  const modal = document.getElementById('modal-container');
-  modal.style.display = 'block';
-  modal.innerHTML = '<div class="modal-overlay" id="edit-overlay"><div class="modal-card" style="max-width:480px;max-height:90vh;overflow-y:auto"><button class="modal-close" id="edit-close">&times;</button><h2 style="font-size:22px;font-weight:800;margin-bottom:24px">Edit Profile ✏️</h2><div class="edit-modal-body"><div><label>Name</label><input class="input" id="edit-name" value="' + (profile?.full_name || '') + '"></div><div><label>City</label><select class="input" id="edit-city">' + INDIAN_CITIES.map(c => '<option value="' + c + '"' + (c === profile?.city ? ' selected' : '') + '>' + c + '</option>').join('') + '</select></div><div><label>Bio</label><textarea class="input" id="edit-bio" maxlength="150" style="min-height:80px">' + (profile?.bio || '') + '</textarea></div><div><label>Vibe Level (' + (profile?.energy_level || 5) + ')</label><input type="range" min="1" max="10" value="' + (profile?.energy_level || 5) + '" id="edit-energy"></div><div><label>Concert Persona</label><select class="input" id="edit-persona">' + CONCERT_PERSONAS.map(p => { const val = p.emoji + ' ' + p.title + ' — ' + p.desc; return '<option value="' + val + '"' + (profile?.concert_persona?.includes(p.title) ? ' selected' : '') + '>' + p.emoji + ' ' + p.title + '</option>'; }).join('') + '</select></div><div><label>Avatar</label><input type="file" accept="image/*" id="edit-avatar" class="input"></div><button class="btn-gradient w-full mt-8" id="edit-save">Save Changes</button></div></div></div>';
-  document.getElementById('edit-close').onclick = () => { modal.style.display = 'none'; modal.innerHTML = ''; };
-  document.getElementById('edit-overlay').onclick = (e) => { if (e.target.id === 'edit-overlay') { modal.style.display = 'none'; modal.innerHTML = ''; } };
-  document.getElementById('edit-save').onclick = async () => {
-    const btn = document.getElementById('edit-save');
-    btn.textContent = 'Saving...'; btn.disabled = true;
-    const avatarFile = document.getElementById('edit-avatar').files[0];
-    let avatarUrl = profile?.avatar_url;
-    if (avatarFile && state.user) { const url = await API.uploadAvatar(state.user.id, avatarFile); if (url) avatarUrl = url; }
-    const updatedData = { full_name: document.getElementById('edit-name').value.trim(), city: document.getElementById('edit-city').value, bio: document.getElementById('edit-bio').value.trim(), energy_level: parseInt(document.getElementById('edit-energy').value), concert_persona: document.getElementById('edit-persona').value, avatar_url: avatarUrl };
-    if (state.user) { await API.updateProfile(state.user.id, updatedData); }
-    else { Object.assign(state.profile, updatedData); }
-    modal.style.display = 'none'; modal.innerHTML = '';
-    showToast('Profile updated! ✨', 'success');
-    navigate('#profile');
+function showEditModal() {
+  var p = state.profile || {};
+  var m = document.getElementById('modal-container');
+  m.style.display = 'block';
+  m.innerHTML =
+    '<div class="modal-overlay" id="ed-ov"><div class="modal-card" style="max-width:480px;max-height:90vh;overflow-y:auto">' +
+    '<button class="modal-close" id="ed-close">&times;</button>' +
+    '<h2 style="font-size:22px;font-weight:800;margin-bottom:24px">Edit Profile ✏️</h2>' +
+    '<div class="edit-modal-body">' +
+      '<div><label>Name</label><input class="input" id="ed-name" value="'+esc(p.full_name||'')+'"></div>' +
+      '<div><label>City</label><select class="input" id="ed-city">'+CITIES.map(function(c){return '<option value="'+c+'"'+(c===p.city?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>' +
+      '<div><label>Bio</label><textarea class="input" id="ed-bio" maxlength="150" style="min-height:80px">'+(p.bio||'')+'</textarea></div>' +
+      '<div><label>Vibe Level ('+(p.energy_level||5)+')</label><input type="range" min="1" max="10" value="'+(p.energy_level||5)+'" id="ed-energy"></div>' +
+      '<div><label>Concert Persona</label><select class="input" id="ed-persona">'+PERSONAS.map(function(pe){var v=pe.emoji+' '+pe.title;return '<option value="'+v+'"'+(p.concert_persona&&p.concert_persona.indexOf(pe.title)>=0?' selected':'')+'>'+pe.emoji+' '+pe.title+'</option>';}).join('')+'</select></div>' +
+      '<div><label>Avatar</label><input type="file" accept="image/*" id="ed-avatar" class="input"></div>' +
+      '<button class="btn-gradient w-full mt-8" id="ed-save">Save Changes</button>' +
+    '</div></div></div>';
+  document.getElementById('ed-close').onclick = function(){m.style.display='none';m.innerHTML='';};
+  document.getElementById('ed-ov').onclick = function(e){if(e.target.id==='ed-ov'){m.style.display='none';m.innerHTML='';}};
+  document.getElementById('ed-save').onclick = function() {
+    var btn = document.getElementById('ed-save');
+    btn.textContent='Saving...'; btn.disabled=true;
+    var avFile = document.getElementById('ed-avatar').files[0];
+    var avP = avFile && state.user ? API.uploadAvatar(state.user.id, avFile) : Promise.resolve(p.avatar_url);
+    avP.then(function(avUrl){
+      var upd = {
+        full_name: document.getElementById('ed-name').value.trim(),
+        city: document.getElementById('ed-city').value,
+        bio: document.getElementById('ed-bio').value.trim(),
+        energy_level: parseInt(document.getElementById('ed-energy').value),
+        concert_persona: document.getElementById('ed-persona').value,
+        avatar_url: avUrl || p.avatar_url
+      };
+      if(state.user) return API.updateProfile(state.user.id, upd);
+      Object.assign(state.profile, upd); return upd;
+    }).then(function(){
+      m.style.display='none'; m.innerHTML='';
+      showToast('Profile updated! ✨','success');
+      nav('#profile');
+    });
   };
 }
 
 // ========== ROUTER ==========
 function getRoute() {
-  const hash = window.location.hash.slice(1) || '';
-  const parts = hash.split('/');
-  return { page: parts[0] || '', param: parts.slice(1).join('/') || '' };
+  var hash = window.location.hash.slice(1) || '';
+  var slash = hash.indexOf('/');
+  if (slash >= 0) return { page: hash.substring(0, slash), param: hash.substring(slash + 1) };
+  return { page: hash, param: '' };
 }
 
-async function router() {
-  const { page, param } = getRoute();
-  const app = document.getElementById('app');
+function router() {
+  var route = getRoute();
+  var page = route.page;
+  var param = route.param;
+  var app = document.getElementById('app');
   if (!app) return;
 
-  const routeKey = page + '/' + param;
-  if (state.currentPage === routeKey && page !== '') return;
-  state.currentPage = routeKey;
+  var key = page + '/' + param;
+  if (state.currentPage === key && page !== '') return;
+  state.currentPage = key;
 
-  let pageObj;
+  var pageObj = null;
 
   switch (page) {
     case '':
-      if (state.user && state.profile?.full_name) { navigate('#home'); return; }
+      if (state.user && state.profile && state.profile.full_name) { nav('#home'); return; }
       pageObj = landingPage();
       break;
     case 'onboarding':
       pageObj = onboardingPage();
       break;
     case 'home':
-      if (!state.user && !state.profile) { navigate(''); return; }
+      if (!state.user && !state.profile) { nav(''); return; }
       pageObj = homePage();
       break;
     case 'swipe':
-      if (!state.user && !state.profile) { navigate(''); return; }
-      pageObj = param ? swipePage(param) : swipeEventSelectPage();
+      if (!state.user && !state.profile) { nav(''); return; }
+      pageObj = param ? swipePage(param) : swipeSelectPage();
       break;
     case 'chat':
-      if (!state.user) { navigate(''); return; }
+      if (!state.user) { nav(''); return; }
       pageObj = param ? chatDetailPage(param) : chatListPage();
       break;
     case 'turf':
-      if (!state.user && !state.profile) { navigate(''); return; }
+      if (!state.user && !state.profile) { nav(''); return; }
       pageObj = turfPage();
       break;
     case 'profile':
-      if (!state.user && !state.profile) { navigate(''); return; }
+      if (!state.user && !state.profile) { nav(''); return; }
       pageObj = profilePage();
       break;
     default:
-      navigate(state.user ? '#home' : '');
+      nav(state.user ? '#home' : '');
       return;
   }
 
   if (pageObj) {
-    app.style.opacity = '0';
-    setTimeout(() => {
-      app.innerHTML = pageObj.html;
-      app.style.opacity = '1';
-      app.style.transition = 'opacity 0.2s ease';
-      if (pageObj.init) pageObj.init();
-    }, 50);
+    app.innerHTML = pageObj.html;
+    try { if (pageObj.init) pageObj.init(); } catch(e) { console.error('Page init error:', e); }
   }
 }
 
 window.addEventListener('hashchange', router);
 
-// ========== INIT ==========
-let confetti;
+// ========== APP INIT ==========
+function initApp() {
+  // Start visual systems
+  startParticles();
+  initConfetti();
 
-async function initApp() {
-  try {
-    new ParticleSystem(document.getElementById('particles'));
-  } catch(e) { console.warn('Particles failed:', e); }
+  // Try loading Supabase SDK dynamically if not already loaded
+  initSupabase();
 
-  try {
-    confetti = new ConfettiSystem();
-  } catch(e) { console.warn('Confetti failed:', e); }
-
-  if (supabase) {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
+  if (sb) {
+    sb.auth.getSession().then(function(res) {
+      var session = res.data ? res.data.session : null;
+      if (session && session.user) {
         state.user = session.user;
-        state.profile = await API.getProfile(session.user.id);
-        if (!state.profile?.full_name || !state.profile?.city) {
-          navigate('#onboarding');
-        } else if (!window.location.hash || window.location.hash === '#' || window.location.hash === '') {
-          navigate('#home');
-        }
-        API.subscribeToNewMatches(session.user.id, () => { showToast("It's a match! 🎉", 'success'); if (confetti) confetti.burst(); });
+        return API.getProfile(session.user.id).then(function(profile) {
+          state.profile = profile;
+          if (!profile || !profile.full_name || !profile.city) {
+            nav('#onboarding');
+          } else if (!window.location.hash || window.location.hash === '#' || window.location.hash === '') {
+            nav('#home');
+          } else {
+            router();
+          }
+          API.subMatches(session.user.id, function() {
+            showToast("It's a match! 🎉", 'success');
+            if (confetti) confetti.burst();
+          });
+        });
+      } else {
+        router();
       }
-    } catch(e) { console.warn('Session check failed:', e); }
+    }).catch(function(e) {
+      console.warn('Session check failed:', e);
+      router();
+    });
 
-    try {
-      supabase.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'SIGNED_IN' && session?.user) {
-          state.user = session.user;
-          state.profile = await API.getProfile(session.user.id);
-          const modal = document.getElementById('modal-container');
-          if (modal) { modal.style.display = 'none'; modal.innerHTML = ''; }
-          if (!state.profile?.full_name || !state.profile?.city) navigate('#onboarding');
-          else navigate('#home');
-          API.subscribeToNewMatches(session.user.id, () => { showToast("It's a match! 🎉", 'success'); if (confetti) confetti.burst(); });
-        } else if (event === 'SIGNED_OUT') {
-          state.user = null; state.profile = null; state.currentPage = '';
-          navigate('');
-        }
-      });
-    } catch(e) { console.warn('Auth listener failed:', e); }
+    sb.auth.onAuthStateChange(function(event, session) {
+      if (event === 'SIGNED_IN' && session && session.user) {
+        state.user = session.user;
+        var m = document.getElementById('modal-container');
+        if (m) { m.style.display = 'none'; m.innerHTML = ''; }
+        API.getProfile(session.user.id).then(function(profile) {
+          state.profile = profile;
+          if (!profile || !profile.full_name || !profile.city) nav('#onboarding');
+          else nav('#home');
+          API.subMatches(session.user.id, function() {
+            showToast("It's a match! 🎉", 'success');
+            if (confetti) confetti.burst();
+          });
+        });
+      } else if (event === 'SIGNED_OUT') {
+        state.user = null; state.profile = null; state.currentPage = '';
+        nav('');
+      }
+    });
+  } else {
+    // No Supabase - just render the page
+    router();
   }
-
-  await router();
 }
 
-document.addEventListener('DOMContentLoaded', initApp);
+// Load Supabase SDK then init
+function loadSupabaseSDK() {
+  var script = document.createElement('script');
+  script.src = 'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase-js.min.js';
+  script.onload = function() {
+    initSupabase();
+    initApp();
+  };
+  script.onerror = function() {
+    console.warn('Supabase SDK failed to load, running in demo mode');
+    initApp();
+  };
+  document.head.appendChild(script);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadSupabaseSDK);
+} else {
+  loadSupabaseSDK();
+}
+
+})();
 </script>
 </body>
 </html>
