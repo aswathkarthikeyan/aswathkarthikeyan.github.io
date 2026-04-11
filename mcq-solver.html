@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCQ Solver</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap');
+  :root{--bg:#0a0a0f;--surface:#111118;--border:#1e1e2e;--accent:#00ff88;--accent2:#ff3366;--text:#e8e8f0;--muted:#555570;--card:#13131f}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px}
+  header{width:100%;max-width:520px;display:flex;align-items:center;justify-content:space-between;padding-bottom:24px;border-bottom:1px solid var(--border);margin-bottom:28px}
+  .logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:4px;color:var(--accent);text-shadow:0 0 20px rgba(0,255,136,0.4)}
+  .logo span{color:var(--accent2)}
+  .status-pill{font-family:'Space Mono',monospace;font-size:.6rem;padding:6px 12px;border-radius:20px;border:1px solid var(--border);color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+  .status-pill.ready{border-color:var(--accent);color:var(--accent)}
+  .status-pill.thinking{border-color:#ffaa00;color:#ffaa00;animation:pulse 1s infinite}
+  .status-pill.error{border-color:var(--accent2);color:var(--accent2)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .main{width:100%;max-width:520px;display:flex;flex-direction:column;gap:14px}
+  .key-row{display:flex;gap:8px;align-items:center}
+  .key-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:1px;outline:none;transition:border-color .2s}
+  .key-input:focus{border-color:var(--accent)}
+  .key-input.saved{border-color:var(--accent);color:var(--accent)}
+  .key-save{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 14px;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .key-save:hover{border-color:var(--accent);color:var(--accent)}
+  .key-hint{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px}
+  .key-hint a{color:var(--accent);text-decoration:none}
+  .preview-box{width:100%;aspect-ratio:4/3;background:var(--card);border:2px dashed var(--border);border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--muted);cursor:pointer;transition:border-color .2s;position:relative}
+  .preview-box:hover{border-color:var(--accent)}
+  .preview-box.has-image{border-style:solid;border-color:var(--border);cursor:default}
+  .preview-box img{width:100%;height:100%;object-fit:contain;display:none}
+  .ph{font-size:2.5rem}
+  .ph-text{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:1px;text-align:center;line-height:2}
+  .clear-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.75);border:1px solid var(--border);color:var(--muted);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.75rem;display:none;align-items:center;justify-content:center}
+  .btn-row{display:flex;gap:10px}
+  .btn-sec{flex:1;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:13px;font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:2px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+  .btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-solve{flex:2;background:var(--accent);color:#000;border:none;border-radius:10px;padding:13px;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:4px;cursor:pointer;transition:all .2s}
+  .btn-solve:hover:not(:disabled){background:#00ffaa;transform:translateY(-1px)}
+  .btn-solve:disabled{background:var(--muted);cursor:not-allowed;transform:none}
+  .answer-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:170px;text-align:center}
+  .answer-letter{font-family:'Bebas Neue',sans-serif;font-size:9rem;line-height:1;color:var(--accent);text-shadow:0 0 60px rgba(0,255,136,.5);letter-spacing:4px}
+  .answer-letter.bad{color:var(--accent2);text-shadow:0 0 60px rgba(255,51,102,.5)}
+  .answer-sub{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:6px}
+  .idle-text{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:1px;line-height:2}
+  .dots{display:flex;gap:8px;margin-top:14px}
+  .dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:bounce 1.4s infinite}
+  .dot:nth-child(2){animation-delay:.2s}
+  .dot:nth-child(3){animation-delay:.4s}
+  @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+  .history{display:flex;flex-wrap:wrap;gap:8px}
+  .h-pill{font-family:'Space Mono',monospace;font-size:.65rem;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--muted)}
+  .h-pill.ok{border-color:var(--accent);color:var(--accent)}
+  .h-pill.bad{border-color:var(--accent2);color:var(--accent2)}
+  input[type="file"]{display:none}
+  footer{margin-top:20px;font-family:'Space Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MCQ<span>.</span>AI</div>
+  <div class="status-pill" id="statusPill">IDLE</div>
+</header>
+
+<div class="main">
+
+  <div class="key-row">
+    <input type="password" class="key-input" id="keyInput" placeholder="Paste Gemini API key (saved locally, one time only)..." />
+    <button class="key-save" onclick="saveKey()">SAVE</button>
+  </div>
+  <div class="key-hint">
+    Free key → <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>
+  </div>
+
+  <div class="preview-box" id="previewBox" onclick="triggerUpload()">
+    <div class="ph" id="phIcon">📷</div>
+    <div class="ph-text" id="phText">TAP TO UPLOAD PHOTO<br>or use camera button</div>
+    <img id="previewImg" alt="">
+    <button class="clear-btn" id="clearBtn" onclick="clearImage(event)">✕</button>
+  </div>
+
+  <input type="file" id="fileInput" accept="image/*" onchange="handleFile(event)">
+
+  <div class="btn-row">
+    <button class="btn-sec" onclick="openCamera()">📸 CAM</button>
+    <button class="btn-sec" onclick="triggerUpload()">🖼 GALLERY</button>
+    <button class="btn-solve" id="solveBtn" onclick="solve()" disabled>⚡ SOLVE</button>
+  </div>
+
+  <div class="answer-box" id="answerBox">
+    <div class="idle-text">Upload a photo of the question<br>then hit SOLVE</div>
+  </div>
+
+  <div class="history" id="historyRow"></div>
+
+</div>
+
+<footer>GEMINI 2.0 FLASH · KEY SAVED LOCALLY · NO COOLDOWN</footer>
+
+<script>
+  const MODEL = 'gemini-2.0-flash';
+  const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+
+  let imageBase64 = null;
+  let imageMime = 'image/jpeg';
+  let answered = 0;
+
+  function loadKey() {
+    const saved = localStorage.getItem('mcq_gemini_key');
+    if (saved) {
+      document.getElementById('keyInput').value = saved;
+      document.getElementById('keyInput').classList.add('saved');
+      setStatus('READY', 'ready');
+    }
+  }
+
+  function saveKey() {
+    const val = document.getElementById('keyInput').value.trim();
+    if (!val) { alert('Paste your key first'); return; }
+    localStorage.setItem('mcq_gemini_key', val);
+    document.getElementById('keyInput').classList.add('saved');
+    setStatus('READY', 'ready');
+    alert('Saved! You won\'t need to paste it again on this device.');
+  }
+
+  function getKey() {
+    return document.getElementById('keyInput').value.trim()
+        || localStorage.getItem('mcq_gemini_key') || '';
+  }
+
+  function triggerUpload() {
+    if (imageBase64) return;
+    const fi = document.getElementById('fileInput');
+    fi.removeAttribute('capture');
+    fi.click();
+  }
+
+  function openCamera() {
+    const fi = document.getElementById('fileInput');
+    fi.setAttribute('capture', 'environment');
+    fi.click();
+  }
+
+  function handleFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    imageMime = file.type || 'image/jpeg';
+    const reader = new FileReader();
+    reader.onload = ev => {
+      imageBase64 = ev.target.result.split(',')[1];
+      showPreview(ev.target.result);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }
+
+  function showPreview(dataUrl) {
+    document.getElementById('phIcon').style.display = 'none';
+    document.getElementById('phText').style.display = 'none';
+    const img = document.getElementById('previewImg');
+    img.src = dataUrl;
+    img.style.display = 'block';
+    document.getElementById('clearBtn').style.display = 'flex';
+    document.getElementById('previewBox').classList.add('has-image');
+    document.getElementById('previewBox').onclick = null;
+    document.getElementById('solveBtn').disabled = false;
+    setStatus('READY', 'ready');
+  }
+
+  function clearImage(e) {
+    e.stopPropagation();
+    imageBase64 = null;
+    document.getElementById('phIcon').style.display = 'block';
+    document.getElementById('phText').style.display = 'block';
+    const img = document.getElementById('previewImg');
+    img.src = ''; img.style.display = 'none';
+    document.getElementById('clearBtn').style.display = 'none';
+    document.getElementById('previewBox').classList.remove('has-image');
+    document.getElementById('previewBox').onclick = () => triggerUpload();
+    document.getElementById('solveBtn').disabled = true;
+    setStatus(getKey() ? 'READY' : 'IDLE', getKey() ? 'ready' : '');
+    document.getElementById('answerBox').innerHTML =
+      '<div class="idle-text">Upload a photo of the question<br>then hit SOLVE</div>';
+  }
+
+  async function solve() {
+    const key = getKey();
+    if (!key) {
+      alert('Paste your Gemini API key at the top.\nGet it free at aistudio.google.com/apikey');
+      return;
+    }
+    if (!imageBase64) return;
+
+    document.getElementById('solveBtn').disabled = true;
+    setStatus('THINKING', 'thinking');
+    document.getElementById('answerBox').innerHTML = `
+      <div class="idle-text">Reading question...</div>
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+
+    const t0 = Date.now();
+
+    try {
+      const res = await fetch(`${ENDPOINT}?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: imageMime, data: imageBase64 } },
+              { text: `This is a multiple choice question from an engineering entrance exam (SRMJEEE / Class 12 PCM level).
+
+Read the question and all four options A, B, C, D carefully including any math, formulas, or chemistry.
+
+Respond with ONLY the single correct option letter. One character. Nothing else.` }
+            ]
+          }],
+          generationConfig: {
+            maxOutputTokens: 50,
+            temperature: 0
+          }
+        })
+      });
+
+      const data = await res.json();
+      const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+
+      if (data.error) throw new Error(data.error.message);
+
+      const candidate = data.candidates?.[0];
+      if (!candidate) throw new Error('No response — check your API key');
+
+      if (candidate.finishReason === 'SAFETY') throw new Error('Blocked by safety filter');
+
+      const raw = candidate.content?.parts?.[0]?.text?.trim() || '';
+      const letter = raw.match(/[ABCD]/i)?.[0]?.toUpperCase() || '?';
+      const valid = ['A','B','C','D'].includes(letter);
+
+      document.getElementById('answerBox').innerHTML = `
+        <div class="answer-letter ${valid ? '' : 'bad'}">${letter}</div>
+        <div class="answer-sub">${valid ? `SOLVED IN ${elapsed}s` : 'COULD NOT READ — RETAKE PHOTO'}</div>`;
+
+      setStatus(valid ? 'ANSWERED' : 'ERROR', valid ? 'ready' : 'error');
+      addHistory(letter, valid);
+
+    } catch(err) {
+      setStatus('ERROR', 'error');
+      document.getElementById('answerBox').innerHTML = `
+        <div class="answer-letter bad" style="font-size:2.5rem">ERR</div>
+        <div class="answer-sub" style="color:#ff3366;font-size:.55rem;max-width:240px;margin-top:10px;line-height:1.6">
+          ${err.message.substring(0, 120)}
+        </div>`;
+    } finally {
+      document.getElementById('solveBtn').disabled = false;
+    }
+  }
+
+  function addHistory(letter, valid) {
+    answered++;
+    const row = document.getElementById('historyRow');
+    const pill = document.createElement('div');
+    pill.className = `h-pill ${valid ? 'ok' : 'bad'}`;
+    pill.textContent = `Q${answered}:${letter}`;
+    row.appendChild(pill);
+  }
+
+  function setStatus(txt, cls) {
+    const p = document.getElementById('statusPill');
+    p.textContent = txt;
+    p.className = 'status-pill ' + (cls || '');
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && !document.getElementById('solveBtn').disabled && imageBase64) {
+      e.preventDefault();
+      solve();
+    }
+  });
+
+  loadKey();
+</script>
+
+</body>
+</html>
